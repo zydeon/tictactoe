@@ -10,10 +10,10 @@ all: compile
 compile:
 	
 ifeq ($(OS), Linux)
-		echo 'adiciona cena de compilar para linux'
+		g++ *.cpp -lGLU -lglut -o $(NAME)
 else
 ifeq ($(OS), Darwin) # mac
-		g++ -framework OpenGL -framework GLUT $(NAME).cpp -o $(NAME)
+		g++ -framework OpenGL -framework GLUT *.cpp -o $(NAME)
 endif
 endif
 
