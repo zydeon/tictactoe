@@ -1,6 +1,6 @@
 #ifdef __linux__
 	#define VERSION 0
-#elif defined TARGET_OS_MAC
+#elif defined __APPLE__
 	#define VERSION 1
 #else
 	#define VERSION 2
