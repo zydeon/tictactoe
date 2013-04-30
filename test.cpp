@@ -1,3 +1,11 @@
+#ifdef __linux__
+	#define VERSION 0
+#elif defined TARGET_OS_MAC
+	#define VERSION 1
+#else
+	#define VERSION 2
+#endif
+
 #include "TicTacToe.hpp"
 
 TicTacToe t;
@@ -8,6 +16,8 @@ int main() {
 	char aux;
 	int pos;
 	bool x;
+	int y = VERSION;
+	printf("Version = %d\n",y);
 	
 	while(true) {
 		scanf("%c %d",&aux,&pos);
