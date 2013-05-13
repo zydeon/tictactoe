@@ -12,7 +12,8 @@ TicTacToe t;
 
 void handleResult(int);
 
-int main() {
+
+/*int main() {
 	char aux;
 	int pos;
 	bool x;
@@ -27,7 +28,7 @@ int main() {
 		}
 	}
 	return 0;
-}
+}*/
 
 void handleResult(int result) {
 	bool xTurn;
