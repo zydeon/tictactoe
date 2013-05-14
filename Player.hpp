@@ -30,6 +30,7 @@ class Player {
 		// get reference point (where is looking at)
 		GLfloat getRefX();
 		GLfloat getRefZ();
+		GLfloat getRefY();
 
 
 	private:

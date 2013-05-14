@@ -19,3 +19,6 @@ GLfloat Player::getRefX(){
 GLfloat Player::getRefZ(){
 	return this->z - cos(angY) * 0.01f;
 }
+GLfloat Player::getRefY(){
+	return this->y + sin(angX) * 0.01f;
+}
