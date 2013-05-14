@@ -1,5 +1,11 @@
 #include "TicTacToeGL.hpp"
-#include <GLUT/glut.h>
+#ifdef __linux__
+	#include <GL/glut.h>
+#elif defined __APPLE__
+	#include <GLUT/glut.h>
+#else
+	#include <GL\glut.h>
+#endif
 
 TicTacToeGL::TicTacToeGL(int argc, char **argv){
 	glutInit(&argc, argv);
