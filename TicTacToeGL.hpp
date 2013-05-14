@@ -1,6 +1,8 @@
 #ifndef TICTACTOEGL_HPP
 #define TICTACTOEGL_HPP
 
+#include "Player.hpp"
+
 #define RED   	 1.0, 0.0, 0.0, 1.0
 #define GREEN 	 0.0, 1.0, 0.0, 1.0
 #define BLUE   	 0.0, 0.0, 1.0, 1.0
@@ -8,6 +10,9 @@
 #define WHITE    1.0, 1.0, 1.0, 1.0
 
 class TicTacToeGL{
+	// all members must be static because callback functions must be static
+	// is this class useless ?
+
 	public:
 		static const int XSCREEN = 800;
 		static const int YSCREEN = 600;
@@ -23,10 +28,18 @@ class TicTacToeGL{
 		static void inputSpecialCb(int key, int x, int y);
 		static void display();
 
+
 		TicTacToeGL(int, char**);
-		static void init();
+
 	private:
+		// static members must be "redefined" and initialized outside
+		static Player p1;
+		static Player p2;
+
+		static Player *currPlayer; // pointer to current player
+
 		static void draw();
+		static void init();
 
 };
 

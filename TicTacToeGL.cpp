@@ -1,4 +1,3 @@
-#include "TicTacToeGL.hpp"
 #ifdef __linux__
 	#include <GL/glut.h>
 #elif defined __APPLE__
@@ -7,13 +6,25 @@
 	#include <GL\glut.h>
 #endif
 
+#include <stdio.h>
+#include "TicTacToeGL.hpp"
+#include "Player.hpp"
+
+Player TicTacToeGL::p1;
+Player TicTacToeGL::p2;
+Player *TicTacToeGL::currPlayer;
+
 TicTacToeGL::TicTacToeGL(int argc, char **argv){
 	glutInit(&argc, argv);
 	glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH );
 	glutInitWindowSize (XSCREEN, YSCREEN); 
 	glutInitWindowPosition (0, 0); 
 	glutCreateWindow ("Tic Tac Toe");
-  
+
+	
+ 	printf("%f\n", p1.x);
+
+
 	init();
 
 	// glutReshapeFunc(resize);
@@ -24,6 +35,8 @@ TicTacToeGL::TicTacToeGL(int argc, char **argv){
 }
 
 void TicTacToeGL::init(){
+	currPlayer = &p1;
+
 	glClearColor(WHITE);
 	glShadeModel(GL_SMOOTH);
 	// initLights();
@@ -67,13 +80,15 @@ void TicTacToeGL::display(){
 void TicTacToeGL::draw(){
  	glClear(GL_COLOR_BUFFER_BIT);
 
+ 	// printf("%f\n", p1.x);
+
 	glPushMatrix();
-		glColor4f(YELLOW);
+		glColor4f(RED);
 		glutSolidCube(1.0);
 	glPopMatrix();
 }
 
 
 int main(int argc, char **argv){
-	TicTacToeGL *t = new TicTacToeGL(argc, argv);
+	new TicTacToeGL(argc, argv);
 }
