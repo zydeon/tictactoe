@@ -74,6 +74,18 @@ void TicTacToeGL::inputKeyboardCb(unsigned char key, int x, int y){
 			currPlayer->x += Player::velocity * sin(currPlayer->angY);
 			currPlayer->z -= Player::velocity * cos(currPlayer->angY);
 		break;
+		case 's':
+			currPlayer->x -= Player::velocity * sin(currPlayer->angY);
+			currPlayer->z += Player::velocity * cos(currPlayer->angY);
+		break;
+		case 'a':
+			currPlayer->x += Player::velocity * sin(currPlayer->angY-PI/2);
+			currPlayer->z += Player::velocity * cos(currPlayer->angY-PI/2);
+		break;
+		case 'd':
+			currPlayer->x += Player::velocity * sin(currPlayer->angY+PI/2);
+			currPlayer->z += Player::velocity * cos(currPlayer->angY+PI/2);
+		break;						
    	}	
 	glutPostRedisplay();
 }
