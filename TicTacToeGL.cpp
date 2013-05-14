@@ -25,7 +25,6 @@ TicTacToeGL::TicTacToeGL(int argc, char **argv){
 
 void TicTacToeGL::init(){
 	glClearColor(WHITE);
-	gluOrtho2D(-50, 50, -50, 50);		//....	Definicao sistema coordenadas area de desenho
 	glShadeModel(GL_SMOOTH);
 	// initLights();
 	initControls();
@@ -48,9 +47,26 @@ void TicTacToeGL::inputSpecialCb(int key, int x, int y){
 void TicTacToeGL::inputKeyboardCb(int key, int x, int y){
 }
 
+
 void TicTacToeGL::display(){
- 	glClear(GL_COLOR_BUFFER_BIT);
+	glViewport(0,0,XSCREEN, YSCREEN);
 	
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(80, 1, 0.1, 1000);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	gluLookAt(0,0,20, 0,0,0, 0,1,0);
+
+	draw();
+
+	glutSwapBuffers();
+}
+
+void TicTacToeGL::draw(){
+ 	glClear(GL_COLOR_BUFFER_BIT);
+
 	glColor4f(YELLOW);
 	glBegin(GL_QUADS);
 		glVertex2f(-25.0f, -25.0f);
@@ -58,14 +74,6 @@ void TicTacToeGL::display(){
         glVertex2f( 25.0f,  25.0f);
 		glVertex2f( 25.0f, -25.0f);               
     glEnd();
-
-	/*glPushMatrix();
-		glColor4f(YELLOW);
-		glutSolidSphere(10, 250, 250);
-	glPopMatrix();*/
-
-    glutPostRedisplay();
-	glutSwapBuffers();
 }
 
 
