@@ -6,9 +6,6 @@ Fence::Fence(GLfloat w_, GLfloat h_, GLfloat d_) {
 	d = d_;
 }
 
-void Fence:drawCorner(GLfloat length) {
-	
-}
 
 void Fence::drawFence() {
 	glColor3f(1.0, 0.0, 1.0);

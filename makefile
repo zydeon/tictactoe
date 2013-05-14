@@ -2,6 +2,7 @@
 OS := $(shell uname)
 NAME = TicTacToe
 FLAGS = -Wall
+CLASSES = Player.cpp Fence.cpp TicTacToe.cpp TicTacToeGL.cpp 
 
 # compile and run
 all: compile 
@@ -11,10 +12,10 @@ all: compile
 compile:
 	
 ifeq ($(OS), Linux)
-		g++ $(FLAGS) *.cpp -lGLU -lglut -o $(NAME)
+		g++ $(FLAGS) $(CLASSES) -lGLU -lglut -o $(NAME)
 else
 ifeq ($(OS), Darwin) # mac
-		g++ $(FLAGS) -framework OpenGL -framework GLUT *.cpp -o $(NAME)
+		g++ $(FLAGS) -framework OpenGL -framework GLUT $(CLASSES) -o $(NAME)
 endif
 endif
 
