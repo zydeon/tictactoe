@@ -7,8 +7,10 @@
 #endif
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "TicTacToeGL.hpp"
 #include "Player.hpp"
+#include <math.h>
 
 Player TicTacToeGL::p1;
 Player TicTacToeGL::p2;
@@ -20,9 +22,6 @@ TicTacToeGL::TicTacToeGL(int argc, char **argv){
 	glutInitWindowSize (XSCREEN, YSCREEN); 
 	glutInitWindowPosition (0, 0); 
 	glutCreateWindow ("Tic Tac Toe");
-
-	
- 	printf("%f\n", p1.x);
 
 
 	init();
@@ -46,6 +45,7 @@ void TicTacToeGL::init(){
 
 void TicTacToeGL::initControls(){
 	glutSpecialFunc( inputSpecialCb ); 
+	glutKeyboardFunc( inputKeyboardCb );
 	#ifdef __linux__
 		glutMotionPassiveMotionFunc( inputMouseCb );
 	#elif defined __APPLE__
@@ -54,14 +54,31 @@ void TicTacToeGL::initControls(){
 }
 
 void TicTacToeGL::inputMouseCb(int x, int y){
+	currPlayer->angY += Player::sensitivity ;
+	printf("%f\n", currPlayer->angY);
+	glutPostRedisplay();
 }
 void TicTacToeGL::inputSpecialCb(int key, int x, int y){
 }
-void TicTacToeGL::inputKeyboardCb(int key, int x, int y){
+void TicTacToeGL::inputKeyboardCb(unsigned char key, int x, int y){
+    switch (key) {
+		case 27:
+			exit(0);
+		break;	
+		case 'w':
+			printf("%f\n", currPlayer->x);
+			printf("%f\n", currPlayer->y);
+			printf("%f\n", currPlayer->z);
+			currPlayer->x += Player::velocity * sin(currPlayer->angY);
+			currPlayer->z -= Player::velocity * cos(currPlayer->angY);
+		break;
+   	}	
+	glutPostRedisplay();
 }
 
 
 void TicTacToeGL::display(){
+ 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	glViewport(0,0,XSCREEN, YSCREEN);
 	
 	glMatrixMode(GL_PROJECTION);
@@ -70,7 +87,12 @@ void TicTacToeGL::display(){
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(0,0,20, 0,0,0, 0,1,0);
+
+	printf(">%f\n", currPlayer->getRefX());
+
+	gluLookAt( currPlayer->x,currPlayer->y,currPlayer->z,
+			   currPlayer->getRefX(),0,0,
+				0,1,0);
 
 	draw();
 
@@ -78,13 +100,12 @@ void TicTacToeGL::display(){
 }
 
 void TicTacToeGL::draw(){
- 	glClear(GL_COLOR_BUFFER_BIT);
 
  	// printf("%f\n", p1.x);
 
 	glPushMatrix();
 		glColor4f(RED);
-		glutSolidCube(1.0);
+		glutWireCube(2.0);
 	glPopMatrix();
 }
 

@@ -9,6 +9,8 @@
 #define YELLOW   1.0, 1.0, 0.0, 1.0
 #define WHITE    1.0, 1.0, 1.0, 1.0
 
+#define PI    3.14159265359
+
 class TicTacToeGL{
 	// all members must be static because callback functions must be static
 	// is this class useless ?
@@ -24,7 +26,7 @@ class TicTacToeGL{
 		static void initControls();
 		// calbacks (need to be static)
 		static void inputMouseCb(int x, int y);
-		static void inputKeyboardCb(int key, int x, int y);
+		static void inputKeyboardCb(unsigned char key, int x, int y);
 		static void inputSpecialCb(int key, int x, int y);
 		static void display();
 

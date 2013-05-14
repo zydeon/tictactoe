@@ -9,16 +9,28 @@
 	#include <GL\glut.h>
 #endif
 
+
 class Player {
 
 	public:
-		Player();
-
 		GLfloat x;
 		GLfloat y;
-		// angulos de rotacao com eixos do Y e X (olhar para cima/baixo e lados)
-		GLfloat rotX;
-		GLfloat rotY;
+		GLfloat z;
+		// rotation angles with X and Y axes (look up/down and right/left)
+		GLfloat angX;
+		GLfloat angY;
+
+		static const GLfloat velocity = 0.3;
+		// sensitivity of mouse (velocity of rotation)
+		static const GLfloat sensitivity = 0.05;
+
+
+		Player();
+
+		// get reference point (where is looking at)
+		GLfloat getRefX();
+		GLfloat getRefZ();
+
 
 	private:
 
