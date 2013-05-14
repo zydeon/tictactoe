@@ -67,13 +67,10 @@ void TicTacToeGL::display(){
 void TicTacToeGL::draw(){
  	glClear(GL_COLOR_BUFFER_BIT);
 
-	glColor4f(YELLOW);
-	glBegin(GL_QUADS);
-		glVertex2f(-25.0f, -25.0f);
-        glVertex2f(-25.0f,  25.0f);
-        glVertex2f( 25.0f,  25.0f);
-		glVertex2f( 25.0f, -25.0f);               
-    glEnd();
+	glPushMatrix();
+		glColor4f(YELLOW);
+		glutSolidCube(1.0);
+	glPopMatrix();
 }
 
 
