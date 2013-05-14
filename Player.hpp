@@ -22,7 +22,7 @@ class Player {
 
 		static const GLfloat velocity = 0.3;
 		// sensitivity of mouse (velocity of rotation)
-		static const GLfloat sensitivity = 0.05;
+		static const GLfloat sensitivity = 0.001;
 
 
 		Player();

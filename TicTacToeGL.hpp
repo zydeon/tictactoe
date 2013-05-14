@@ -16,8 +16,8 @@ class TicTacToeGL{
 	// is this class useless ?
 
 	public:
-		static const int XSCREEN = 800;
-		static const int YSCREEN = 600;
+		static const int XSCREEN = 600;
+		static const int YSCREEN = 400;
 
 		static const int XWORLD = 20;
 		static const int YWORLD = 20;
@@ -39,6 +39,9 @@ class TicTacToeGL{
 		static Player p2;
 
 		static Player *currPlayer; // pointer to current player
+
+		static int mouseX;
+		static int mouseY;
 
 		static void draw();
 		static void init();

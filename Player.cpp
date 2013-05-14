@@ -3,9 +3,9 @@
 #include <math.h>
 
 Player::Player(){
-	this->x = 0.0;
+	this->x = 1.0;
 	this->y = 0.0;
-	this->z = 20.0;
+	this->z = 5.0;
 
 	this->angX = 0.0;
 	this->angY = 0.0;
@@ -14,8 +14,8 @@ Player::Player(){
 
 
 GLfloat Player::getRefX(){
-	return this->x + sin(angY);
+	return this->x + sin(angY) * 0.01f;
 }
 GLfloat Player::getRefZ(){
-	return this->z - cos(angY);
+	return this->z - cos(angY) * 0.01f;
 }

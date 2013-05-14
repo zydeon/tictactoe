@@ -15,6 +15,7 @@
 Player TicTacToeGL::p1;
 Player TicTacToeGL::p2;
 Player *TicTacToeGL::currPlayer;
+int TicTacToeGL::mouseX;
 
 TicTacToeGL::TicTacToeGL(int argc, char **argv){
 	glutInit(&argc, argv);
@@ -54,9 +55,13 @@ void TicTacToeGL::initControls(){
 }
 
 void TicTacToeGL::inputMouseCb(int x, int y){
-	currPlayer->angY += Player::sensitivity ;
+
+	printf("%d %d\n", x, mouseX);
+	currPlayer->angY += (x-mouseX) * Player::sensitivity ;
+
 	printf("%f\n", currPlayer->angY);
 	glutPostRedisplay();
+	mouseX = x;
 }
 void TicTacToeGL::inputSpecialCb(int key, int x, int y){
 }
@@ -66,9 +71,6 @@ void TicTacToeGL::inputKeyboardCb(unsigned char key, int x, int y){
 			exit(0);
 		break;	
 		case 'w':
-			printf("%f\n", currPlayer->x);
-			printf("%f\n", currPlayer->y);
-			printf("%f\n", currPlayer->z);
 			currPlayer->x += Player::velocity * sin(currPlayer->angY);
 			currPlayer->z -= Player::velocity * cos(currPlayer->angY);
 		break;
@@ -88,10 +90,10 @@ void TicTacToeGL::display(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	printf(">%f\n", currPlayer->getRefX());
+	// printf(">%f\n", currPlayer->getRefX());
 
 	gluLookAt( currPlayer->x,currPlayer->y,currPlayer->z,
-			   currPlayer->getRefX(),0,0,
+			   currPlayer->getRefX(),0,currPlayer->getRefZ(),
 				0,1,0);
 
 	draw();
