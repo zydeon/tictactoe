@@ -155,6 +155,11 @@ void TicTacToeGL::display(){
 	glLoadIdentity();
 	gluLookAt(obsPini[0], obsPini[1], obsPini[2], obsPfin[0], obsPfin[1], obsPfin[2], 0, 1, 0);
 
+	/*
+	 * Muda depois isto a vontade, estava a dar conflito com o que
+	 * estava a fazer por isso comentei o teu
+	 */
+	 
 	// printf(">%f\n", currPlayer->getRefX());
 
 	/*gluLookAt( currPlayer->x, currPlayer->y, currPlayer->z,
