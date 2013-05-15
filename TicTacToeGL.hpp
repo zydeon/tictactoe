@@ -1,12 +1,10 @@
 #ifndef TICTACTOEGL_HPP
 #define TICTACTOEGL_HPP
 
+#include <math.h>
 #include "Fence.hpp"
 #include "Surface.hpp"
-#include <math.h>
-
-
-#define PI 3.14
+#include "Player.hpp"
 
 #define RED   	 1.0, 0.0, 0.0, 1.0
 #define GREEN 	 0.0, 1.0, 0.0, 1.0
@@ -23,10 +21,15 @@
 
 double toRad(double);
 
+#define PI    3.14159265359
+
 class TicTacToeGL{
+	// all members must be static because callback functions must be static
+	// is this class useless ?
+
 	public:
-		static const int XSCREEN = 800;
-		static const int YSCREEN = 600;
+		static const int XSCREEN = 600;
+		static const int YSCREEN = 400;
 
 		static const int XWORLD = 75;
 		static const int YWORLD = 40;
@@ -39,15 +42,26 @@ class TicTacToeGL{
 		static void inputSpecialCb(int key, int x, int y);
 		static void display();
 
+
 		TicTacToeGL(int, char**);
-		static void init();
+
 	private:
+		// static members must be "redefined" and initialized outside
+		static Player p1;
+		static Player p2;
+
+		static Player *currPlayer; // pointer to current player
+
+		static int mouseX;
+		static int mouseY;
+
 		static void draw();
 		static void drawAxis();
 		static void drawFence();
 		static void drawFloor();
 		static void drawWalls();
 		static void drawSky();
+		static void init();
 
 };
 

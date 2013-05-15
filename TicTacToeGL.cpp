@@ -1,4 +1,3 @@
-
 #ifdef __linux__
 	#include <GL/glut.h>
 #elif defined __APPLE__
@@ -7,6 +6,8 @@
 	#include <GL\glut.h>
 #endif
 
+#include <stdio.h>
+#include <stdlib.h>
 #include "TicTacToeGL.hpp"
 #include <iostream>
 
@@ -32,6 +33,11 @@ double toRad(double deg) {
 	return (PI*deg)/180;
 }
 
+Player TicTacToeGL::p1;
+Player TicTacToeGL::p2;
+Player *TicTacToeGL::currPlayer;
+int TicTacToeGL::mouseX;
+int TicTacToeGL::mouseY;
 
 TicTacToeGL::TicTacToeGL(int argc, char **argv){
 	glutInit(&argc, argv);
@@ -39,7 +45,8 @@ TicTacToeGL::TicTacToeGL(int argc, char **argv){
 	glutInitWindowSize (XSCREEN, YSCREEN); 
 	glutInitWindowPosition (0, 0); 
 	glutCreateWindow ("Tic Tac Toe");
-  
+
+
 	init();
 
 	// glutReshapeFunc(resize);
@@ -51,6 +58,8 @@ TicTacToeGL::TicTacToeGL(int argc, char **argv){
 
 void TicTacToeGL::init(){
 	glClearColor(BLACK);
+	currPlayer = &p1;
+
 	glShadeModel(GL_SMOOTH);
 	// initLights();
 	initControls();
@@ -65,6 +74,14 @@ void TicTacToeGL::initControls(){
 }
 
 void TicTacToeGL::inputMouseCb(int x, int y){
+
+	currPlayer->angY += (x-mouseX) * Player::sensitivity ;
+	currPlayer->angX += (mouseY-y) * Player::sensitivity ;
+
+	glutPostRedisplay();
+
+	mouseX = x;
+	mouseY = y;
 }
 void TicTacToeGL::inputSpecialCb(int key, int x, int y){
 	switch(key) {
@@ -93,11 +110,32 @@ void TicTacToeGL::inputSpecialCb(int key, int x, int y){
 	
 }
 void TicTacToeGL::inputKeyboardCb(unsigned char key, int x, int y){
-	switch(key) {
-		case 27: exit(0); break; // Esc
-		case 'a': obsPfin[1] += incVisao; break;
-		case 'z': obsPfin[1] -= incVisao; break;
-	}
+
+    switch (key) {
+		case 27:
+			exit(0);
+		break;
+		
+		case 'r': obsPfin[1] += incVisao; break;
+		case 'f': obsPfin[1] -= incVisao; break;
+		
+		case 'w':
+			currPlayer->x += Player::velocity * sin(currPlayer->angY);
+			currPlayer->z -= Player::velocity * cos(currPlayer->angY);
+		break;
+		case 's':
+			currPlayer->x -= Player::velocity * sin(currPlayer->angY);
+			currPlayer->z += Player::velocity * cos(currPlayer->angY);
+		break;
+		case 'a':
+			currPlayer->x += Player::velocity * sin(currPlayer->angY-PI/2);
+			currPlayer->z += Player::velocity * cos(currPlayer->angY-PI/2);
+		break;
+		case 'd':
+			currPlayer->x += Player::velocity * sin(currPlayer->angY+PI/2);
+			currPlayer->z += Player::velocity * cos(currPlayer->angY+PI/2);
+		break;						
+   	}	
 	glutPostRedisplay();
 }
 
@@ -107,6 +145,8 @@ void TicTacToeGL::display(){
 	// Viewport
 	glViewport(0,0,XSCREEN,YSCREEN);
 	// Projecao
+ 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+	glViewport(0,0,XSCREEN, YSCREEN);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(projAngle, XSCREEN/YSCREEN, projNear, projFar);
@@ -115,17 +155,24 @@ void TicTacToeGL::display(){
 	glLoadIdentity();
 	gluLookAt(obsPini[0], obsPini[1], obsPini[2], obsPfin[0], obsPfin[1], obsPfin[2], 0, 1, 0);
 
+	// printf(">%f\n", currPlayer->getRefX());
+
+	/*gluLookAt( currPlayer->x, currPlayer->y, currPlayer->z,
+			   currPlayer->getRefX(), currPlayer->getRefY(), currPlayer->getRefZ(),
+				0,1,0);*/
+
 	draw();
 
 	glutSwapBuffers();
 }
 
 void TicTacToeGL::draw(){
+
  	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glPushMatrix();
-		glColor4f(YELLOW);
-		glutSolidCube(1.0);
+		glColor4f(RED);
+		glutWireCube(2.0);
 	glPopMatrix();
 	
 	drawAxis();
@@ -195,7 +242,7 @@ void TicTacToeGL::drawAxis() {
 void TicTacToeGL::drawFence() {
 	int numberOfFences = SQUARESIZE/FENCE_W;
 	
-	
+	//FIX THIS
 	double difference = SQUARESIZE-numberOfFences*FENCE_W;
 	
 	bool corner = difference > 0.1;
@@ -269,5 +316,5 @@ void TicTacToeGL::drawFence() {
 }
 
 int main(int argc, char **argv){
-	TicTacToeGL *t = new TicTacToeGL(argc, argv);
+	new TicTacToeGL(argc, argv);
 }
