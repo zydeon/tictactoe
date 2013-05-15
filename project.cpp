@@ -49,10 +49,7 @@ void drawFence() {
 	int i;
 	
 	Fence *f;
-	
-	//glMatrixMode(GL_MODELVIEW);
-	//glLoadIdentity();
-	
+
 	cout << numberOfFences << " fences" << endl;
 	
 	for(i = 0; i < numberOfFences; i++) {

@@ -6,11 +6,18 @@
 	#include <GL\glut.h>
 #endif
 
+#include "RgbImage.h"
+
+#define FENCE_BMP "textures/fence1.bmp"
+
 class Fence {
 	public:
 		Fence(GLfloat w_, GLfloat h_, GLfloat d_);
 		void drawFence();
-		void drawCorner();
+		void drawSmallPiece(GLfloat size);
 	private:
 		GLfloat w,h,d;
+		GLuint texture;
+		RgbImage imag;
+		void loadTexture();
 };

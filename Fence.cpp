@@ -4,81 +4,45 @@ Fence::Fence(GLfloat w_, GLfloat h_, GLfloat d_) {
 	w = w_;
 	h = h_;
 	d = d_;
+	loadTexture();
 }
 
-
 void Fence::drawFence() {
-	glColor3f(1.0, 0.0, 1.0);
-	
-	// Front
-	glPushMatrix();
-	glScalef(3,3,3);
+	glBindTexture(GL_TEXTURE_2D,texture);
+
 	glBegin(GL_POLYGON);
-		glNormal3f(-0.5, 0.0, 1.0);
-		glVertex3f(-0.5, 0.0, 0.0);
-		glVertex3f(-0.5,	0.0, 0.0);
-		glVertex3f(-0.5, 3, 0.0);
-		glVertex3f(0, 4, 0.0);
-		glVertex3f(0.5, 3, 0.0);
-		glVertex3f(0.5, 0.0, 0.0);
+		glTexCoord2f(1.0f,0.0f); glVertex3f(w/2, -h/2, 0.0);
+		glTexCoord2f(1.0f,0.75f); glVertex3f(w/2, h/4, 0.0);
+		glTexCoord2f(0.5f,1.f); glVertex3f(0, h/2, 0.0);
+		glTexCoord2f(0.0f,0.75f); glVertex3f(-w/2, h/4, 0.0);
+		glTexCoord2f(0.0f,0.0f); glVertex3f(-w/2, -h/2, 0.0);
+		glTexCoord2f(1.0f,0.0f); glVertex3f(w/2, -h/2, 0.0);
 	glEnd();
 	
-	glPopMatrix();
-	
-	// Front
+}
+
+void Fence::drawSmallPiece(GLfloat size) {
+	glBindTexture(GL_TEXTURE_2D,texture);
 	glBegin(GL_POLYGON);
-		glNormal3f(-w/2, 0.0, 1.0);
-		glVertex3f(-w/2, 0.0, 0.0);
-		glVertex3f(-w/2,	0.0, 0.0);
-		glVertex3f(-w/2, 3*h/4, 0.0);
-		glVertex3f(0, h, 0.0);
-		glVertex3f(w/2, 3*h/4, 0.0);
-		glVertex3f(w/2, 0.0, 0.0);
+		glTexCoord2f(1.0f,0.0f); glVertex3f(size/2, -h/2, 0.0);
+		glTexCoord2f(1.0f,0.75f); glVertex3f(size/2, h/4, 0.0);
+		glTexCoord2f(0.0f,0.75f); glVertex3f(-size/2, h/4, 0.0);
+		glTexCoord2f(0.0f,0.0f); glVertex3f(-size/2, -h/2, 0.0);
+		glTexCoord2f(1.0f,0.0f); glVertex3f(size/2, -h/2, 0.0);
 	glEnd();
-	
-	// Right
-	/*glColor3f(0.0, 0.0, 1.0);
-	glBegin(GL_POLYGON);
-		glNormal3f(0.0, 0.0, 1.0);
-		glVertex3f(w,	0.0,	0.0);
-		glVertex3f(w,	0.0,	d);
-		glVertex3f(w,	3*h/4,	d);
-		glVertex3f(w/2,	h,		d);
-		glVertex3f(w/2, h,		0.0);
-		glVertex3f(w,	3*h/4,	0.0);
-		glVertex3f(w,	0.0,	0.0);
-	glEnd();*/
-	
-	// Back
-	/*glColor3f(1.0, 1.0, 0.0);
-	glBegin(GL_POLYGON);
-		glVertex3f(0.0, 0.0, d);
-		glVertex3f(w,	0.0, d);
-		glVertex3f(w, 3*h/4, d);
-		glVertex3f(w/2, h, d);
-		glVertex3f(0.0, 3*h/4, d);
-		glVertex3f(0.0, 0.0, d);
-	glEnd();*/
-	
-	// Left
-	/*glColor3f(1.0, 0.0, 0.0);
-	glBegin(GL_POLYGON);
-		glVertex3f(0.0,	0.0,	0.0);
-		glVertex3f(0.0,	0.0,	d);
-		glVertex3f(0.0,	3*h/4,	d);
-		glVertex3f(w/2,	h,		d);
-		glVertex3f(w/2, h,		0.0);
-		glVertex3f(0.0,	3*h/4,	0.0);
-		glVertex3f(0.0,	0.0,	0.0);
-	glEnd();*/
-	
-	// Bottom
-	/*glColor3f(0.0, 1.0, 0.0);
-	glBegin(GL_POLYGON);
-		glVertex3f(0.0, 0.0, 0.0);
-		glVertex3f(w, 0.0, 0.0);
-		glVertex3f(w, 0.0, d);
-		glVertex3f(0.0, 0.0, d);
-	glEnd();*/
-	
+}
+
+void Fence::loadTexture() {
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	imag.LoadBmpFile(FENCE_BMP);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3,
+		imag.GetNumCols(),
+		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
+		imag.ImageData());
 }

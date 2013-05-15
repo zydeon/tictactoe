@@ -1,8 +1,8 @@
 # detect operating system
 OS := $(shell uname)
 NAME = TicTacToe
-FLAGS = -Wall
-CLASSES = Player.cpp Fence.cpp TicTacToe.cpp TicTacToeGL.cpp 
+FLAGS = -Wall -lm
+CLASSES = Player.cpp Fence.cpp TicTacToe.cpp TicTacToeGL.cpp RgbImage.cpp Surface.cpp
 
 # compile and run
 all: compile 
