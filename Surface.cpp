@@ -32,7 +32,7 @@ void Surface::loadTexture() {
 	}
 	else if(type == F_TYPE) {
 		imag.LoadBmpFile(FLOOR_BMP);
-		reps = 4.0;
+		reps = 8.0;
 	}
 	else {
 		imag.LoadBmpFile(WALLS_BMP);

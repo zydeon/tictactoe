@@ -28,8 +28,8 @@ class TicTacToeGL{
 	// is this class useless ?
 
 	public:
-		static const int XSCREEN = 600;
-		static const int YSCREEN = 400;
+		static const int XSCREEN = 800;
+		static const int YSCREEN = 600;
 
 		static const int XWORLD = 75;
 		static const int YWORLD = 40;

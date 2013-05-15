@@ -235,12 +235,12 @@ void TicTacToeGL::drawAxis() {
 	
 	glColor3f(0.0, 1.0, 0.0);
 	glBegin(GL_LINES);
-		glVertex3i(0,0,0);
-		glVertex3i(XWORLD,0,0);
-		glVertex3i(0,0,0);
-		glVertex3i(0,YWORLD,0);
-		glVertex3i(0,0,0);
-		glVertex3i(0,0,ZWORLD);
+		glVertex3i(-XWORLD/2,0,0);
+		glVertex3i(XWORLD/2,0,0);
+		glVertex3i(0,-YWORLD/2,0);
+		glVertex3i(0,YWORLD/2,0);
+		glVertex3i(0,0,-ZWORLD/2);
+		glVertex3i(0,0,ZWORLD/2);
 	glEnd();
 }
 
