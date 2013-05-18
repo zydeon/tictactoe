@@ -184,7 +184,7 @@ void TicTacToeGL::draw(){
 	drawFence();
 	drawFloor();
 	drawWalls();
-	drawSky();
+	// drawSky();
 }
 
 void TicTacToeGL::drawSky() {

@@ -4,7 +4,7 @@
 
 Player::Player(){
 	this->x = 1.0;
-	this->y = 0.0;
+	this->y = 10.0;
 	this->z = 5.0;
 
 	this->angX = 0.0;
