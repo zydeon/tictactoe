@@ -2,9 +2,9 @@
 #include "TicTacToeGL.hpp"
 #include <math.h>
 
-Player::Player(){
+Player::Player(GLfloat y_){
 	this->x = 1.0;
-	this->y = 0.0;
+	this->y = y_;
 	this->z = 5.0;
 
 	this->angX = 0.0;

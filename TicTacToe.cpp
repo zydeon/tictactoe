@@ -13,6 +13,8 @@ int TicTacToe::play(bool _xTurn, int pos) {
 	
 	placeMove(_xTurn,pos);
 	
+	plotGame();
+	
 	win = won(_xTurn);
 	xTurn = !xTurn;
 	

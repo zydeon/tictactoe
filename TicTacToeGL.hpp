@@ -5,6 +5,7 @@
 #include "Fence.hpp"
 #include "Surface.hpp"
 #include "Player.hpp"
+#include "Table.hpp"
 
 #define RED   	 1.0, 0.0, 0.0, 1.0
 #define GREEN 	 0.0, 1.0, 0.0, 1.0
@@ -15,9 +16,16 @@
 
 #define SQUARESIZE 20.0
 
+#define PLAYER_H 4.0
+
 #define FENCE_W 0.75
-#define FENCE_H 7.5
+#define FENCE_H 2.5
 #define FENCE_D 0.5
+
+#define TABLE_W 1.5
+#define TABLE_H 3.0
+#define TABLE_D 1.5
+#define TABLE_F 0.15
 
 double toRad(double);
 
@@ -61,6 +69,7 @@ class TicTacToeGL{
 		static void drawFloor();
 		static void drawWalls();
 		static void drawSky();
+		static void drawTable();
 		static void init();
 
 };

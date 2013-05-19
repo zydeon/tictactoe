@@ -29,15 +29,34 @@ GLfloat angInc = 3.0;
 
 double hAng = 45.0;
 
+bool playerX = true;
+
 double toRad(double deg) {
 	return (PI*deg)/180;
 }
 
-Player TicTacToeGL::p1;
-Player TicTacToeGL::p2;
+Player TicTacToeGL::p1(PLAYER_H);
+Player TicTacToeGL::p2(PLAYER_H);
 Player *TicTacToeGL::currPlayer;
 int TicTacToeGL::mouseX;
 int TicTacToeGL::mouseY;
+
+Table *table;
+Surface *sky;
+Surface *wall;
+Surface *ground;
+Fence *f;
+
+/*
+ * T | Y | U
+ * ---------
+ * G | H | J
+ * ---------
+ * B | N | M
+ * 
+ * X muda de jogador (so joga se estiver na vez certa)
+ * Ainda falta depois desenhar qualquer coisa mais pipi para cada peca
+ */
 
 TicTacToeGL::TicTacToeGL(int argc, char **argv){
 	glutInit(&argc, argv);
@@ -59,6 +78,12 @@ TicTacToeGL::TicTacToeGL(int argc, char **argv){
 void TicTacToeGL::init(){
 	glClearColor(BLACK);
 	currPlayer = &p1;
+
+	table = new Table(TABLE_W,TABLE_H,TABLE_D,TABLE_F);
+	sky = new Surface(XWORLD,ZWORLD,S_TYPE);
+	wall = new Surface(XWORLD,YWORLD,W_TYPE);
+	ground = new Surface(XWORLD,ZWORLD,F_TYPE);
+	f = new Fence(FENCE_W, FENCE_H, FENCE_D);
 
 	glShadeModel(GL_SMOOTH);
 	// initLights();
@@ -134,7 +159,19 @@ void TicTacToeGL::inputKeyboardCb(unsigned char key, int x, int y){
 		case 'd':
 			currPlayer->x += Player::velocity * sin(currPlayer->angY+PI/2);
 			currPlayer->z += Player::velocity * cos(currPlayer->angY+PI/2);
-		break;						
+		break;
+		
+		case 'x': playerX = !playerX; break;
+		
+		case 't': table->makeMove(playerX, 0); break;
+		case 'y': table->makeMove(playerX, 1); break;
+		case 'u': table->makeMove(playerX, 2); break;
+		case 'g': table->makeMove(playerX, 3); break;
+		case 'h': table->makeMove(playerX, 4); break;
+		case 'j': table->makeMove(playerX, 5); break;
+		case 'b': table->makeMove(playerX, 6); break;
+		case 'n': table->makeMove(playerX, 7); break;
+		case 'm': table->makeMove(playerX, 8); break;
    	}	
 	glutPostRedisplay();
 }
@@ -175,59 +212,62 @@ void TicTacToeGL::draw(){
 
  	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glPushMatrix();
+	/*glPushMatrix();
 		glColor4f(RED);
 		glutWireCube(2.0);
-	glPopMatrix();
+	glPopMatrix();*/
 	
 	drawAxis();
 	drawFence();
 	drawFloor();
 	drawWalls();
 	drawSky();
+	drawTable();
 }
 
 void TicTacToeGL::drawSky() {
-	Surface *s = new Surface(XWORLD,ZWORLD,S_TYPE);
 	glPushMatrix();
 		glTranslatef(0.0,YWORLD, 0.0);
 		glRotatef(-90.0,1.0,0.0,0.0);
-		s->drawSurface();
+		sky->drawSurface();
 	glPopMatrix();
 }
 
 void TicTacToeGL::drawWalls() {
-	Surface *w = new Surface(XWORLD,YWORLD,W_TYPE);
 	glPushMatrix();
 		glTranslatef(0.0, YWORLD/2, -ZWORLD/2);
-		w->drawSurface();
+		wall->drawSurface();
 	glPopMatrix();
 	
 	glPushMatrix();
 		glTranslatef(-XWORLD/2, YWORLD/2, 0.0);
 		glRotatef(90.0,0.0,1.0,0.0);
-		w->drawSurface();
+		wall->drawSurface();
 	glPopMatrix();
 	
 	glPushMatrix();
 		glTranslatef(XWORLD/2, YWORLD/2, 0.0);
 		glRotatef(-90.0,0.0,1.0,0.0);
-		w->drawSurface();
+		wall->drawSurface();
 	glPopMatrix();
 	
 	glPushMatrix();
 		glTranslatef(0.0, YWORLD/2, ZWORLD/2);
 		glRotatef(180.0,0.0,1.0,0.0);
-		w->drawSurface();
+		wall->drawSurface();
 	glPopMatrix();
 }
 
 void TicTacToeGL::drawFloor() {
-	
-	Surface *f = new Surface(XWORLD,ZWORLD,F_TYPE);
 	glPushMatrix();
 		glRotatef(90.0, 1.0, 0.0, 0.0);
-		f->drawSurface();
+		ground->drawSurface();
+	glPopMatrix();
+}
+
+void TicTacToeGL::drawTable() {
+	glPushMatrix();
+		table->drawTable();
 	glPopMatrix();
 }
 
@@ -254,7 +294,9 @@ void TicTacToeGL::drawFence() {
 	
 	int i;
 	
-	Fence *f = new Fence(FENCE_W, FENCE_H, FENCE_D);
+	glPushMatrix();
+	
+	glTranslatef(0.0,FENCE_H/2, 0.0);
 
 	for(i = 0; i < numberOfFences; i++) {
 		glPushMatrix();
@@ -318,6 +360,8 @@ void TicTacToeGL::drawFence() {
 			f->drawSmallPiece(difference);
 		glPopMatrix();
 	}
+	
+	glPopMatrix();
 }
 
 int main(int argc, char **argv){

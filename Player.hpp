@@ -25,7 +25,7 @@ class Player {
 		static const GLfloat sensitivity = 0.001;
 
 
-		Player();
+		Player(GLfloat y_);
 
 		// get reference point (where is looking at)
 		GLfloat getRefX();
