@@ -21,8 +21,8 @@ GLfloat projFar = 70;
 GLfloat viewerPos [] = { 0.0, 0.0, 0.0 };
 
 GLfloat rVisao=3.0, aVisao=0.25*PI, incVisao=0.3;
-GLfloat  obsPini[] ={0, 5, 0};
-GLfloat  obsPfin[] ={obsPini[0]-rVisao*cos(aVisao), obsPini[1], obsPini[2]-rVisao*sin(aVisao)};
+GLfloat obsPini[] ={0, 5, 0};
+GLfloat obsPfin[] ={obsPini[0]-rVisao*cos(aVisao), obsPini[1], obsPini[2]-rVisao*sin(aVisao)};
 
 GLfloat viewInc = 2.0;
 GLfloat angInc = 3.0;
