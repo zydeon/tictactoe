@@ -19,12 +19,15 @@
 
 class Surface {
 	public:
-		Surface(GLfloat x_, GLfloat y_, int type_);
-		void drawSurface();
+		Surface(GLfloat w_, GLfloat h_, int type_);
+		void drawSurface(GLfloat nX, GLfloat nY, GLfloat nZ);
 	private:
 		int type;
-		GLfloat y,x,reps;
+		GLfloat h,w,reps;
 		GLuint texture;
 		RgbImage imag;
 		void loadTexture();
+
+		// superficie dividida em quadrados de dimensao 'dim'
+		const static GLfloat dim = 0.5f;
 };

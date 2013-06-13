@@ -2,7 +2,7 @@
 OS := $(shell uname)
 NAME = TicTacToe
 FLAGS = -Wall -lm
-CLASSES = project.cpp Player.cpp Fence.cpp TicTacToe.cpp RgbImage.cpp Surface.cpp Table.cpp TTTGraphics.cpp
+CLASSES = project.cpp Material.hpp Player.cpp Fence.cpp TicTacToe.cpp RgbImage.cpp Surface.cpp Table.cpp TTTGraphics.cpp
 
 # compile and run
 all: compile 

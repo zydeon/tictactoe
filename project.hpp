@@ -1,3 +1,6 @@
+#ifndef PROJECT_HPP
+#define PROJECT_HPP
+
 #include <math.h>
 #include <vector>
 
@@ -17,8 +20,8 @@
 #define XWINDOW 800
 #define YWINDOW 600
 
-#define XWINDOW_POS 100
-#define YWINDOW_POS 100
+#define XWINDOW_POS 50
+#define YWINDOW_POS 50
 
 #define XWORLD 75
 #define YWORLD 40
@@ -52,9 +55,9 @@ void inputKeyboardCb(unsigned char key, int x, int y);
 void display();
 
 // Init functions
-void initLights();
 void initControls();
 void initObjects();
+void initLights(void);
 
 // Drawing functions
 void draw();
@@ -68,4 +71,6 @@ void drawPlayers();
 
 // Control functions
 void changePlayer();
-double toDeg(double rad);
+GLfloat toDeg(GLfloat rad) ;
+
+#endif

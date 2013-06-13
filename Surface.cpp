@@ -1,27 +1,43 @@
 #include "Surface.hpp"
 
-Surface::Surface(GLfloat x_, GLfloat y_, int type_) {
-	x = x_;
-	y = y_;
+Surface::Surface(GLfloat w_, GLfloat h_, int type_) {
+	w = w_;
+	h = h_;
 	type = type_;
 	loadTexture();
 }
 
-void Surface::drawSurface() {
+void Surface::drawSurface(GLfloat nX, GLfloat nY, GLfloat nZ) {
+
+	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,texture);
-	glBegin(GL_POLYGON);
-		glTexCoord2f(reps,0.0f); glVertex3f(x/2, -y/2, 0.0);
-		glTexCoord2f(reps,reps); glVertex3f(x/2, y/2, 0.0);
-		glTexCoord2f(0.0f,reps); glVertex3f(-x/2, y/2, 0.0);
-		glTexCoord2f(0.0f,0.0f); glVertex3f(-x/2, -y/2, 0.0);
-		glTexCoord2f(reps,0.0f); glVertex3f(x/2, -y/2, 0.0);
+
+	GLint i, j;
+	GLfloat W, H; // numero de quadrados unitarios de 'dim'
+
+	i = j = 0;
+	glBegin(GL_QUADS);
+
+	W = w / dim;
+	H = h / dim;
+	for( i = 0; i < H; ++i ){
+		for( j = 0; j < W; ++j ){
+			glNormal3f(nX, nY, nZ);
+			// face visivel sempre a da frente (considerar coordenadas da textura de 0 a 1)
+			glTexCoord2f(j/W, i/H); 		glVertex3f(j*dim-w/2, i*dim-h/2, 0.0);
+			glTexCoord2f((j+1)/W, i/H); 	glVertex3f((j+1)*dim-w/2, i*dim-h/2, 0.0);
+			glTexCoord2f((j+1)/W, (i+1)/H); glVertex3f((j+1)*dim-w/2, (i+1)*dim-h/2, 0.0);
+			glTexCoord2f(j/W, (i+1)/H); 	glVertex3f(j*dim-w/2, (i+1)*dim-h/2, 0.0);
+		}
+	}
 	glEnd();
+	glDisable(GL_TEXTURE_2D);
 }
 
 void Surface::loadTexture() {
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -32,7 +48,7 @@ void Surface::loadTexture() {
 	}
 	else if(type == F_TYPE) {
 		imag.LoadBmpFile(FLOOR_BMP);
-		reps = 8.0;
+		reps = 1.0;
 	}
 	else {
 		imag.LoadBmpFile(WALLS_BMP);

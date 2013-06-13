@@ -35,6 +35,8 @@ Surface *wall;
 Surface *ground;
 Fence *f;
 
+GLfloat globalLightColor[4];
+
 
 /*
  * T | Y | U
@@ -59,8 +61,8 @@ int main(int argc, char **argv) {
 	YSCREEN = glutGet(GLUT_SCREEN_HEIGHT);
 	glClearColor(BLACK);
 	glShadeModel(GL_SMOOTH);
-	glEnable(GL_TEXTURE_2D);
-	glEnable(GL_DEPTH_TEST);	
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_NORMALIZE);
 
 	initControls();
 	initLights();
@@ -74,7 +76,7 @@ int main(int argc, char **argv) {
 void initObjects(){
 	table = new Table(TABLE_W,TABLE_H,TABLE_D,TABLE_F);
 	sky = new Surface(XWORLD,ZWORLD,S_TYPE);
-	wall = new Surface(XWORLD,YWORLD,W_TYPE);
+	wall = new Surface(YWORLD, XWORLD,W_TYPE);
 	ground = new Surface(XWORLD,ZWORLD,F_TYPE);
 	f = new Fence(FENCE_W, FENCE_H, FENCE_D);
 	
@@ -84,46 +86,6 @@ void initObjects(){
 	players[1].setZ(-5.0);
 	currPlayerIndex = 0;
 	currPlayer = &players[currPlayerIndex];
-}
-
-void initLights(void){
-	// // Ambiente
-	// glLightModelfv(GL_LIGHT_MODEL_AMBIENT, luzGlobalCor);
-
-	// // Tecto (Pontual)
-	// glEnable(GL_LIGHT0);
-	// GLfloat localCor[4] ={0.1, 0.1, 0.1, 1.0};
-	// GLfloat localPos[4] ={xC/2, 10.0, xC/2, 1.0};//{0, xC, 0, 1.0};
-	// GLfloat localCorDif[4] ={ 1, 1, 1, 1.0}; 
-	// GLfloat localAttCon =1.0;
-	// GLfloat localAttLin =0.05;
-	// GLfloat localAttQua =0.0;	
-	// glLightfv(GL_LIGHT0, GL_POSITION, localPos );
-	// glLightfv(GL_LIGHT0, GL_AMBIENT, localCor );
-	// glLightfv(GL_LIGHT0, GL_DIFFUSE,       localCorDif );   
-	// glLightf (GL_LIGHT0, GL_CONSTANT_ATTENUATION, localAttCon);
-	// glLightf (GL_LIGHT0, GL_LINEAR_ATTENUATION, localAttLin) ;
-	// glLightf (GL_LIGHT0, GL_QUADRATIC_ATTENUATION,localAttQua) ;
-
-	// // Foco
-	// glEnable(GL_LIGHT1);
-	// GLfloat direccao[ ] = { sin(angY) , 0, -cos(angY)};
-	// GLfloat concentracao = 128;
-	// GLfloat angulo = 20.0;
-	// // glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, direccao );
-	// glLightf (GL_LIGHT1, GL_SPOT_EXPONENT , concentracao);
-	// glLightf (GL_LIGHT1, GL_SPOT_CUTOFF, angulo);
-	// GLfloat blackAmbientLight[] = {0.0, 0.0, 0.0};
-	// GLfloat whiteSpecularLight[] = {1.0, 1.0, 1.0}; 
-	// GLfloat whiteDiffuseLight[] = {1.0, 1.0, 1.0};
-	// // GLfloat positionLight[4] ={x, y, z, 1.0};
-	// // glLightfv(GL_LIGHT1, GL_POSITION, positionLight );
-	// glLightfv(GL_LIGHT1, GL_AMBIENT, blackAmbientLight );
-	// glLightfv(GL_LIGHT1, GL_SPECULAR, whiteSpecularLight);
-	// glLightfv(GL_LIGHT1, GL_DIFFUSE, whiteDiffuseLight);
-	// // glLightf (GL_LIGHT1, GL_CONSTANT_ATTENUATION, 1.0);
-	// // glLightf (GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.05) ;
-	// // glLightf (GL_LIGHT1, GL_QUADRATIC_ATTENUATION,0.0) ;	
 }
 
 void initControls(){
@@ -140,11 +102,11 @@ void inputKeyboardCb(unsigned char key, int x, int y){
 		break;
 		
 		case 'w':
-			currPlayer->x += Player::velocity * sin(currPlayer->angY);
+			currPlayer->x -= Player::velocity * sin(currPlayer->angY);
 			currPlayer->z -= Player::velocity * cos(currPlayer->angY);
 		break;
 		case 's':
-			currPlayer->x -= Player::velocity * sin(currPlayer->angY);
+			currPlayer->x += Player::velocity * sin(currPlayer->angY);
 			currPlayer->z += Player::velocity * cos(currPlayer->angY);
 		break;
 		case 'a':
@@ -178,8 +140,10 @@ void changePlayer() {
 }
 
 void inputMouseCb(int x, int y){
-	currPlayer->angY += (x-mouseX) * Player::sensitivity ;
 	currPlayer->angX += (mouseY-y) * Player::sensitivity ;
+	currPlayer->angY += (mouseX-x) * Player::sensitivity ;
+	if(currPlayer->angX > PI/2) currPlayer->angX = PI/2;
+	if(currPlayer->angX < -PI/2) currPlayer->angX = -PI/2;
 
 	// fake continuous movement
 	if( x == -XWINDOW_POS )  // limite esquerdo
@@ -187,12 +151,18 @@ void inputMouseCb(int x, int y){
 	else if( x == XSCREEN-XWINDOW_POS )  // limite direito
 		mouseX--;
 	else mouseX = x;
+	if( y == -YWINDOW_POS )  // limite cima
+		mouseY++;
+	else if( y == YSCREEN-YWINDOW_POS )  // limite direito
+		mouseY--;
+	else mouseY = y;
 
-	mouseY = y;
 	glutPostRedisplay();	
 }
 
 void display(){
+
+ 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Viewport
 	glViewport(0,0,XWINDOW,YWINDOW);
@@ -217,12 +187,19 @@ void display(){
 	glutSwapBuffers();
 }
 
-void draw(){
-
-	printf("%f\n", currPlayer->angY);
-
- 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+void draw(){ 	
+	glEnable(GL_COLOR_MATERIAL);
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE ); 
+	glEnable(GL_LIGHTING);
 	
+		// glDisable(GL_TEXTURE_2D);
+		glPushMatrix();
+		glColor4f(BLUE);
+		glTranslatef (-1.2, 5.0, 10.2);		
+		// glutSolidSphere(1.2, 250, 250);
+		glutSolidCube(3.0);
+		glPopMatrix();
+
 	drawAxis();
 	drawFence();
 	drawFloor();
@@ -236,39 +213,39 @@ void drawSky() {
 	glPushMatrix();
 		glTranslatef(0.0,YWORLD, 0.0);
 		glRotatef(-90.0,1.0,0.0,0.0);
-		sky->drawSurface();
+		sky->drawSurface(0, -1, 0);
 	glPopMatrix();
 }
 
 void drawWalls() {
 	glPushMatrix();
-		glTranslatef(0.0, YWORLD/2, -ZWORLD/2);
-		wall->drawSurface();
+		glTranslatef(0, YWORLD/2, -ZWORLD/2);
+		wall->drawSurface(0,0,1);
 	glPopMatrix();
 	
 	glPushMatrix();
 		glTranslatef(-XWORLD/2, YWORLD/2, 0.0);
 		glRotatef(90.0,0.0,1.0,0.0);
-		wall->drawSurface();
+		wall->drawSurface(1,0,0);
 	glPopMatrix();
 	
 	glPushMatrix();
 		glTranslatef(XWORLD/2, YWORLD/2, 0.0);
 		glRotatef(-90.0,0.0,1.0,0.0);
-		wall->drawSurface();
+		wall->drawSurface(-1,0,0);
 	glPopMatrix();
 	
 	glPushMatrix();
 		glTranslatef(0.0, YWORLD/2, ZWORLD/2);
 		glRotatef(180.0,0.0,1.0,0.0);
-		wall->drawSurface();
+		wall->drawSurface(0,0,-1);
 	glPopMatrix();
 }
 
 void drawFloor() {
 	glPushMatrix();
 		glRotatef(90.0, 1.0, 0.0, 0.0);
-		ground->drawSurface();
+		ground->drawSurface(0, 1, 0);
 	glPopMatrix();
 }
 
@@ -279,7 +256,6 @@ void drawTable() {
 }
 
 void drawAxis() {
-	
 	glColor3f(0.0, 1.0, 0.0);
 	glBegin(GL_LINES);
 		glVertex3i(-XWORLD/2,0,0);
@@ -374,12 +350,12 @@ void drawFence() {
 void drawPlayers() {
 	glPushMatrix();
 		glTranslatef(players[0].x, players[0].y, players[0].z);
-		glRotatef(toDeg(players[0].angY) ,0,1,0);
+		glRotatef(toDeg(players[0].angY)+180 ,0,1,0);
 		players[0].drawPlayer();
 	glPopMatrix();
 	glPushMatrix();
 		glTranslatef(players[1].x, players[1].y, players[1].z);
-		glRotatef(toDeg(players[1].angY) ,0,1,0);
+		glRotatef(toDeg(players[1].angY)+180 ,0,1,0);
 		players[1].drawPlayer();
 	glPopMatrix();
 }
@@ -388,6 +364,51 @@ double toRad(double deg) {
 	return (PI*deg)/180;
 }
 
-double toDeg(double rad) {
-	return (180*rad)/PI;
+GLfloat toDeg(GLfloat rad) {
+	return 180*rad/PI;
+}
+
+void initLights(void){
+	globalLightColor[0] = 0.6;
+	globalLightColor[1] = 0.6;
+	globalLightColor[2] = 0.6;
+	globalLightColor[3] = 1.0;
+
+	// Ambiente
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalLightColor);
+
+	// // Tecto (Pontual)
+	// glEnable(GL_LIGHT0);
+	// GLfloat localCor[4] ={0.1, 0.1, 0.1, 1.0};
+	// GLfloat localPos[4] ={xC/2, 10.0, xC/2, 1.0};//{0, xC, 0, 1.0};
+	// GLfloat localCorDif[4] ={ 1, 1, 1, 1.0}; 
+	// GLfloat localAttCon =1.0;
+	// GLfloat localAttLin =0.05;
+	// GLfloat localAttQua =0.0;	
+	// glLightfv(GL_LIGHT0, GL_POSITION, localPos );
+	// glLightfv(GL_LIGHT0, GL_AMBIENT, localCor );
+	// glLightfv(GL_LIGHT0, GL_DIFFUSE,       localCorDif );   
+	// glLightf (GL_LIGHT0, GL_CONSTANT_ATTENUATION, localAttCon);
+	// glLightf (GL_LIGHT0, GL_LINEAR_ATTENUATION, localAttLin) ;
+	// glLightf (GL_LIGHT0, GL_QUADRATIC_ATTENUATION,localAttQua) ;
+
+	// // Foco
+	// glEnable(GL_LIGHT1);
+	// GLfloat direccao[ ] = { sin(angY) , 0, -cos(angY)};
+	// GLfloat concentracao = 128;
+	// GLfloat angulo = 20.0;
+	// // glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, direccao );
+	// glLightf (GL_LIGHT1, GL_SPOT_EXPONENT , concentracao);
+	// glLightf (GL_LIGHT1, GL_SPOT_CUTOFF, angulo);
+	// GLfloat blackAmbientLight[] = {0.0, 0.0, 0.0};
+	// GLfloat whiteSpecularLight[] = {1.0, 1.0, 1.0}; 
+	// GLfloat whiteDiffuseLight[] = {1.0, 1.0, 1.0};
+	// // GLfloat positionLight[4] ={x, y, z, 1.0};
+	// // glLightfv(GL_LIGHT1, GL_POSITION, positionLight );
+	// glLightfv(GL_LIGHT1, GL_AMBIENT, blackAmbientLight );
+	// glLightfv(GL_LIGHT1, GL_SPECULAR, whiteSpecularLight);
+	// glLightfv(GL_LIGHT1, GL_DIFFUSE, whiteDiffuseLight);
+	// // glLightf (GL_LIGHT1, GL_CONSTANT_ATTENUATION, 1.0);
+	// // glLightf (GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.05) ;
+	// // glLightf (GL_LIGHT1, GL_QUADRATIC_ATTENUATION,0.0) ;	
 }

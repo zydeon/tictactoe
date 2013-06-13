@@ -11,6 +11,7 @@ Player::Player(GLfloat y_){
 }
 
 void Player::drawPlayer() {
+	glEnable(GL_TEXTURE_2D);
 	glPushMatrix();
 		drawTorso();
 		
@@ -48,6 +49,7 @@ void Player::drawPlayer() {
 			drawFoot();
 		glPopMatrix();
 	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
 }
 
 void Player::drawFoot() {
@@ -280,7 +282,7 @@ void Player::setZ(GLfloat z_) {
 }
 
 GLfloat Player::getRefX(){
-	return this->x + sin(angY) * 0.01f;
+	return this->x - sin(angY) * 0.01f;
 }
 GLfloat Player::getRefZ(){
 	return this->z - cos(angY) * 0.01f;
