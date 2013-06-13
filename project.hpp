@@ -52,8 +52,9 @@ void inputKeyboardCb(unsigned char key, int x, int y);
 void display();
 
 // Init functions
-void init();
+void initLights();
 void initControls();
+void initObjects();
 
 // Drawing functions
 void draw();
@@ -67,3 +68,4 @@ void drawPlayers();
 
 // Control functions
 void changePlayer();
+double toDeg(double rad);
