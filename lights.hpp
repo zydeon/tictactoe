@@ -9,8 +9,7 @@
 	#include <GL\glut.h>
 #endif
 
-GLfloat globalLightColor[4];
 
-void initLights(void);
+void initLights();
 
 #endif

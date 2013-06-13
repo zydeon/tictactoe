@@ -57,7 +57,6 @@ void display();
 // Init functions
 void initControls();
 void initObjects();
-void initLights(void);
 
 // Drawing functions
 void draw();

@@ -1,15 +1,15 @@
-#include "lights.hpp"
 #include <stdio.h>
+#include "lights.hpp"
 
-void initLights(void){
-	globalLightColor[0] = 1.0;
-	globalLightColor[1] = 1.0;
-	globalLightColor[2] = 1.0;
-	globalLightColor[3] = 1.0;
+void initLights(){
+	// globalLightColor[0] = 1.0;
+	// globalLightColor[1] = 1.0;
+	// globalLightColor[2] = 1.0;
+	// globalLightColor[3] = 1.0;
 
 	printf("KASJNbdkasjdnbksajndbksajnd\n");
 	// Ambiente
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalLightColor);
+	// glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalLightColor);
 
 	// // Tecto (Pontual)
 	// glEnable(GL_LIGHT0);

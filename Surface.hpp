@@ -8,25 +8,22 @@
 #endif
 
 #include "RgbImage.h"
+#include "Material.hpp"
 
-#define FLOOR_BMP "textures/grass.bmp"
-#define WALLS_BMP "textures/parede1.bmp"
-#define SKY_BMP "textures/sky.bmp"
-
-#define F_TYPE 0
-#define S_TYPE 1
-#define W_TYPE 2
+#define FLOOR_BMP 	"textures/grass.bmp"
+#define WALLS_BMP 	"textures/parede1.bmp"
+#define SKY_BMP 	"textures/sky.bmp"
 
 class Surface {
 	public:
-		Surface(GLfloat w_, GLfloat h_, int type_);
+		Surface(GLfloat w_, GLfloat h_, char * image, Material m);
 		void drawSurface(GLfloat nX, GLfloat nY, GLfloat nZ);
 	private:
-		int type;
-		GLfloat h,w,reps;
+		GLfloat h, w;
 		GLuint texture;
+		Material material;
 		RgbImage imag;
-		void loadTexture();
+		void loadTexture(char *im_path);
 
 		// superficie dividida em quadrados de dimensao 'dim'
 		const static GLfloat dim = 0.5f;

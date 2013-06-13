@@ -1,10 +1,11 @@
 #include "Surface.hpp"
 
-Surface::Surface(GLfloat w_, GLfloat h_, int type_) {
-	w = w_;
-	h = h_;
-	type = type_;
-	loadTexture();
+Surface::Surface(GLfloat w_, GLfloat h_, char *image, Material m):
+					w(w_),
+					h(h_),
+					material(m)
+	{
+	loadTexture(image);
 }
 
 void Surface::drawSurface(GLfloat nX, GLfloat nY, GLfloat nZ) {
@@ -34,7 +35,7 @@ void Surface::drawSurface(GLfloat nX, GLfloat nY, GLfloat nZ) {
 	glDisable(GL_TEXTURE_2D);
 }
 
-void Surface::loadTexture() {
+void Surface::loadTexture(char *im_path) {
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
@@ -42,18 +43,7 @@ void Surface::loadTexture() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	if(type == S_TYPE) {
-		imag.LoadBmpFile(SKY_BMP);
-		reps = 1.0;
-	}
-	else if(type == F_TYPE) {
-		imag.LoadBmpFile(FLOOR_BMP);
-		reps = 1.0;
-	}
-	else {
-		imag.LoadBmpFile(WALLS_BMP);
-		reps = 1.0;
-	}
+	imag.LoadBmpFile(im_path);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 		imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
