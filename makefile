@@ -15,7 +15,7 @@ ifeq ($(OS), Linux)
 		g++ $(FLAGS) $(CLASSES) -lGLU -lglut -o $(NAME)
 else
 ifeq ($(OS), Darwin) # mac
-		g++ $(FLAGS) -framework OpenGL -framework GLUT $(CLASSES) -o $(NAME)
+		g++ $(FLAGS) -framework OpenGL -framework GLUT -framework ApplicationServices $(CLASSES) -o $(NAME)
 endif
 endif
 

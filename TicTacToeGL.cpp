@@ -10,11 +10,15 @@
 #include <stdlib.h>
 #include "TicTacToeGL.hpp"
 #include <iostream>
+#include <ApplicationServices/ApplicationServices.h>
 
 #define RADIUS 40.0
 
 using namespace std;
 
+int windowWidth, windowHeight;
+int warped; // control mouse movement
+int cnt = 0;
 GLfloat projAngle = 100;
 GLfloat projNear = 1;
 GLfloat projFar = 70;
@@ -56,9 +60,39 @@ TicTacToeGL::TicTacToeGL(int argc, char **argv){
 
 }
 
+void TicTacToeGL::f(int v){
+	CGEventRef event = CGEventCreate(NULL);
+	CGPoint cursor = CGEventGetLocation(event);
+	CFRelease(event);
+	int x = cursor.x;
+	int y = cursor.y;
+
+	printf("%f %f\n", (cursor.x-mouseX), (mouseY-cursor.y));
+
+	if(!warped){
+		currPlayer->angY += (x-mouseX) * Player::sensitivity ;
+		currPlayer->angX += (mouseY-y) * Player::sensitivity ;
+
+		if(x < 10){
+			glutWarpPointer(400, 300);
+			warped = 1;
+		}
+	}
+	else
+		warped = 0;
+
+	mouseX = x;
+	mouseY = y;
+
+	glutPostRedisplay();
+	glutTimerFunc(10, f, 0);
+}
+
 void TicTacToeGL::init(){
 	glClearColor(BLACK);
 	currPlayer = &p1;
+
+	glutTimerFunc(10, f, 0);
 
 	glShadeModel(GL_SMOOTH);
 	// initLights();
@@ -70,18 +104,32 @@ void TicTacToeGL::init(){
 void TicTacToeGL::initControls(){
 	glutSpecialFunc( inputSpecialCb ); 
 	glutKeyboardFunc(inputKeyboardCb);
-	glutPassiveMotionFunc( inputMouseCb ); // A glutPassiveMotionFunc funciona também em linux
+	// glutPassiveMotionFunc( inputMouseCb ); // A glutPassiveMotionFunc funciona também em linux
 }
 
 void TicTacToeGL::inputMouseCb(int x, int y){
+	if(!warped){
+		currPlayer->angY += (x-mouseX) * Player::sensitivity ;
+		currPlayer->angX += (mouseY-y) * Player::sensitivity ;
 
-	currPlayer->angY += (x-mouseX) * Player::sensitivity ;
-	currPlayer->angX += (mouseY-y) * Player::sensitivity ;
-
-	glutPostRedisplay();
+		// TODO mudar valores concretos para valores gerais
+		// if(x!=400 || y!=300){
+		if(x<10 ){
+			// CGWarpMouseCursorPosition(CGPointMake(400, 300));
+			// glutPassiveMotionFunc(NULL);
+			glutWarpPointer(400, 300);
+			// mouseX = 400;
+			// mouseY = 300;
+			warped = 1;
+		}
+	}
+	else
+		warped = 0;
 
 	mouseX = x;
 	mouseY = y;
+	glutPostRedisplay();
+
 }
 void TicTacToeGL::inputSpecialCb(int key, int x, int y){
 	switch(key) {
@@ -116,9 +164,6 @@ void TicTacToeGL::inputKeyboardCb(unsigned char key, int x, int y){
 			exit(0);
 		break;
 		
-		case 'r': obsPfin[1] += incVisao; break;
-		case 'f': obsPfin[1] -= incVisao; break;
-		
 		case 'w':
 			currPlayer->x += Player::velocity * sin(currPlayer->angY);
 			currPlayer->z -= Player::velocity * cos(currPlayer->angY);
@@ -141,7 +186,7 @@ void TicTacToeGL::inputKeyboardCb(unsigned char key, int x, int y){
 
 
 void TicTacToeGL::display(){
-
+	// glutSetCursor(GLUT_CURSOR_NONE);
 	// Viewport
 	glViewport(0,0,XSCREEN,YSCREEN);
 	// Projecao
@@ -153,26 +198,20 @@ void TicTacToeGL::display(){
 	// Observador
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	// gluLookAt(obsPini[0], obsPini[1], obsPini[2], obsPfin[0], obsPfin[1], obsPfin[2], 0, 1, 0);
 
 	/*
 	 * Muda depois isto a vontade, estava a dar conflito com o que
 	 * estava a fazer por isso comentei o teu
 	 */
 	 
-	// printf(">%f\n", currPlayer->getRefX());
-
 	gluLookAt( currPlayer->x, currPlayer->y, currPlayer->z,
 			   currPlayer->getRefX(), currPlayer->getRefY(), currPlayer->getRefZ(),
 				0,1,0);
-
-	draw();
-
+	draw();	
 	glutSwapBuffers();
 }
 
 void TicTacToeGL::draw(){
-
  	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glPushMatrix();
@@ -182,8 +221,8 @@ void TicTacToeGL::draw(){
 	
 	drawAxis();
 	drawFence();
-	drawFloor();
-	drawWalls();
+	// drawFloor();
+	// drawWalls();
 	// drawSky();
 }
 
@@ -321,5 +360,8 @@ void TicTacToeGL::drawFence() {
 }
 
 int main(int argc, char **argv){
+
+	windowHeight = 1280; // glutGet(GLUT_SCREEN_HEIGHT); not working on mac
+	windowWidth = 800; // glutGet(GLUT_SCREEN_WIDTH); 
 	new TicTacToeGL(argc, argv);
 }

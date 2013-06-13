@@ -62,6 +62,7 @@ class TicTacToeGL{
 		static void drawWalls();
 		static void drawSky();
 		static void init();
+		static void f(int v);
 
 };
 
