@@ -30,8 +30,8 @@ private:
     GLfloat shininess;
 
 public:
-	Material(	color4 a = color4(0.2, 0.2, 0.2, 1.0), 
-				color4 d = color4(0.8, 0.8, 0.8, 1.0),
+	Material(	color4 a = color4(0.0, 0.0, 0.0, 1.0), 
+				color4 d = color4(0.0, 0.0, 0.0, 1.0),
 				color4 s = color4(0.0, 0.0, 0.0, 1.0),
 				color4 e = color4(0.0, 0.0, 0.0, 1.0),
 				GLfloat sh = 0 ) :

@@ -9,6 +9,9 @@
 
 #include "RgbImage.h"
 #include "Material.hpp"
+#include <string>
+using namespace std;
+
 
 #define FLOOR_BMP 	"textures/grass.bmp"
 #define WALLS_BMP 	"textures/parede1.bmp"
@@ -16,14 +19,14 @@
 
 class Surface {
 	public:
-		Surface(GLfloat w_, GLfloat h_, char * image, Material m);
+		Surface(GLfloat w_, GLfloat h_, string image, Material m);
 		void drawSurface(GLfloat nX, GLfloat nY, GLfloat nZ);
 	private:
 		GLfloat h, w;
 		GLuint texture;
 		Material material;
 		RgbImage imag;
-		void loadTexture(char *im_path);
+		void loadTexture(string im_path);
 
 		// superficie dividida em quadrados de dimensao 'dim'
 		const static GLfloat dim = 0.5f;

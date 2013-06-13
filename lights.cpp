@@ -1,15 +1,13 @@
 #include <stdio.h>
+#include "Material.hpp"
 #include "lights.hpp"
 
-void initLights(){
-	// globalLightColor[0] = 1.0;
-	// globalLightColor[1] = 1.0;
-	// globalLightColor[2] = 1.0;
-	// globalLightColor[3] = 1.0;
+color4 globalAmbientColor = color4(0.7, 0.7, 0.7, 1.0);
 
-	printf("KASJNbdkasjdnbksajndbksajnd\n");
+void initLights(){
+
 	// Ambiente
-	// glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalLightColor);
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbientColor.values );
 
 	// // Tecto (Pontual)
 	// glEnable(GL_LIGHT0);

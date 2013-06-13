@@ -1,6 +1,6 @@
 #include "Surface.hpp"
 
-Surface::Surface(GLfloat w_, GLfloat h_, char *image, Material m):
+Surface::Surface(GLfloat w_, GLfloat h_, string image, Material m):
 					w(w_),
 					h(h_),
 					material(m)
@@ -9,10 +9,9 @@ Surface::Surface(GLfloat w_, GLfloat h_, char *image, Material m):
 }
 
 void Surface::drawSurface(GLfloat nX, GLfloat nY, GLfloat nZ) {
-
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,texture);
-
+	material.apply();
 	GLint i, j;
 	GLfloat W, H; // numero de quadrados unitarios de 'dim'
 
@@ -35,7 +34,7 @@ void Surface::drawSurface(GLfloat nX, GLfloat nY, GLfloat nZ) {
 	glDisable(GL_TEXTURE_2D);
 }
 
-void Surface::loadTexture(char *im_path) {
+void Surface::loadTexture(string im_path) {
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
@@ -43,7 +42,7 @@ void Surface::loadTexture(char *im_path) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	imag.LoadBmpFile(im_path);
+	imag.LoadBmpFile(im_path.c_str());
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 		imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,

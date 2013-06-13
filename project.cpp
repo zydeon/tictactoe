@@ -36,7 +36,6 @@ Surface *wall;
 Surface *ground;
 Fence *f;
 
-GLfloat globalLightColor[4];
 
 
 /*
@@ -188,26 +187,18 @@ void display(){
 	glutSwapBuffers();
 }
 
-void draw(){ 	
-	glEnable(GL_COLOR_MATERIAL);
-	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE ); 
+void draw(){
 	glEnable(GL_LIGHTING);
-	
-		// glDisable(GL_TEXTURE_2D);
-		glPushMatrix();
-		glColor4f(BLUE);
-		glTranslatef (-1.2, 5.0, 10.2);		
-		// glutSolidSphere(1.2, 250, 250);
-		glutSolidCube(3.0);
-		glPopMatrix();
+	initLights();
 
 	drawAxis();
 	drawFence();
 	drawFloor();
 	drawWalls();
 	drawSky();
-	drawTable();
+	// drawTable();
 	drawPlayers();
+
 }
 
 void drawSky() {

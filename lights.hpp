@@ -9,6 +9,7 @@
 	#include <GL\glut.h>
 #endif
 
+#include "Material.hpp"
 
 void initLights();
 
