@@ -20,11 +20,11 @@ private:
     GLfloat shininess;
 
 public:
-	Material(	color4 a = color4(1.0, 1.0, 1.0, 1.0), 
-				color4 d = color4(1.0, 1.0, 1.0, 1.0),
-				color4 s = color4(1.0, 1.0, 1.0, 1.0),
-				color4 e = color4(0.0, 0.0, 0.0, 1.0),
-				GLfloat sh = 0 ) :
+	Material(	color4 a = color4(1, 1, 1, 1), 
+				color4 d = color4(1, 1, 1, 1),
+				color4 s = color4(1, 1, 1, 1),
+				color4 e = color4(0, 0, 0, 1),
+				GLfloat sh = 64 ) :
 			ambient(a),
 			diffuse(d),
 			specular(s),

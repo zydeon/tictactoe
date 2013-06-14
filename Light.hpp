@@ -31,7 +31,7 @@ public:
 	Light( GLenum id_ 					= GL_LIGHT0
          , color4 ambient_ 				= color4( 0.0, 0.0, 0.0, 1.0 )
          , color4 diffuse_ 				= color4( 1.0, 1.0, 1.0, 1.0 )
-		 , color4 specular_ 			= color4( 1.0, 1.0, 1.0, 1.0 )
+		 , color4 specular_ 			= color4( 0.0, 0.0, 0.0, 1.0 )
 		 , float4 position_ 			= float4( 0.0, 0.0, 1.0, 0.0 )  // last element is 0 if its a directional light (eg, sun)
          , float3 spotDirection_ 		= float3( 0.0, 0.0, 1.0 )
          , float  spotExponent_			= 0.0
@@ -67,8 +67,8 @@ public:
     }
 
     void update(float4 position_, float3 spotDirection_) {
-        glLightfv( id, GL_POSITION, 		position_.values );
-        glLightfv( id, GL_SPOT_DIRECTION,	spotDirection_.values );
+        position = position_;
+        spotDirection = spotDirection_;
     }    
  
     void disable(){

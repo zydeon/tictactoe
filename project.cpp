@@ -17,7 +17,7 @@ using namespace std;
 
 GLfloat projAngle = 100;
 GLfloat projNear = 1;
-GLfloat projFar = 70;
+GLfloat projFar = 200;
 
 bool playerX = true;
 
@@ -89,18 +89,18 @@ void initObjects(){
 void initLights(){
 	glEnable(GL_LIGHTING);
 	// Global ambient model
-	color4 globalAmbientColor = color4(0.3f, 0.3f, 0.3f, 1.0f);
+	color4 globalAmbientColor = color4(0.6f, 0.6f, 0.6f, 1.0f);
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbientColor.values );
 
 	// Personal focus
 	L0 = Light( 		GL_LIGHT0,
 						color4( 0.2, 0.2, 0.2, 1.0 ), 	// ambient
 						color4( 0.8, 0.8, 0.8, 1.0 ),	// diffuse
-						color4( 0.0, 0.0, 1.0, 1.0 ),	// specular
+						color4( 1.0, 1.0, 0.0, 1.0 ),	// specular
 						float4( 0.0, 20.0, 0.0, 1.0 ),	// position 		(will be updated)
-						float3( 0.0, -1.0, 0.0 ),		// spot direction	(will be updated)
-						128.0f,							// spot exponent
-						60.0f							// spot cutoff
+						float3( 0.0, 1.0, 0.0 ),		// spot direction	(will be updated)
+						128,							// spot exponent
+						80.0f							// spot cutoff
 					);	
 
 }
@@ -209,9 +209,10 @@ void display(){
 }
 
 void draw(){
+
+	L0.update( 	float4(currPlayer->x, currPlayer->y, currPlayer->z, 1),
+				float3(-sin(currPlayer->angY), sin(currPlayer->angX), -cos(currPlayer->angY)) );
 	L0.enable();
-		L0.update( 	float4(currPlayer->x, currPlayer->y, currPlayer->z, 1),
-					float3(-sin(currPlayer->angY), sin(currPlayer->angX), -cos(currPlayer->angY)) );
 		drawFence();
 		drawFloor();
 		drawWalls();
@@ -220,9 +221,7 @@ void draw(){
 		drawPlayers();
 		drawFloor();
 
-		glDisable(GL_LIGHTING);
-			drawAxis();
-		glEnable(GL_LIGHTING);
+		drawAxis();
 	L0.disable();
 }
 
@@ -273,14 +272,14 @@ void drawFloor() {
 }
 void drawAxis() {
 	glDisable(GL_LIGHTING);
-	glColor3f(1.0f, 0.0f, 1.0f);
+	glColor3f(1.0f, 1.0f, 1.0f);
 	glBegin(GL_LINES);
-		glVertex3i(-XWORLD/2,0,0);
-		glVertex3i(XWORLD/2,0,0);
+		glVertex3i(-XWORLD/2,1,0);
+		glVertex3i(XWORLD/2,1,0);
 		glVertex3i(0,-YWORLD/2,0);
 		glVertex3i(0,YWORLD/2,0);
-		glVertex3i(0,0,-ZWORLD/2);
-		glVertex3i(0,0,ZWORLD/2);
+		glVertex3i(0,1,-ZWORLD/2);
+		glVertex3i(0,1,ZWORLD/2);
 	glEnd();
 	glEnable(GL_LIGHTING);
 }
