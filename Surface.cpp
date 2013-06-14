@@ -33,21 +33,6 @@ void Surface::drawSurface() {
 	glEnd();
 
 	disableTexture();
-
-	glDisable(GL_LIGHTING);
-	GLfloat x, y;
-	glColor3f(0.8, 0.8, 0.8);
-	glBegin(GL_LINES);
-		for( x = -h/2; x < h/2; x+=dim ){
-			glVertex3f(-w/2, x, 1);
-			glVertex3f(w/2, x, 1);
-		}
-		for( y = -w/2; y < w/2; y+=dim ){
-			glVertex3f(y, -h/2, 1);
-			glVertex3f(y, h/2, 1);
-		}		
-	glEnd();
-	glEnable(GL_LIGHTING);
 }
 
 void Surface::enableTexture(){

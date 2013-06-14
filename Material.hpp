@@ -22,7 +22,7 @@ private:
 public:
 	Material(	color4 a = color4(1.0, 1.0, 1.0, 1.0), 
 				color4 d = color4(1.0, 1.0, 1.0, 1.0),
-				color4 s = color4(0.0, 0.0, 0.0, 1.0),
+				color4 s = color4(1.0, 1.0, 1.0, 1.0),
 				color4 e = color4(0.0, 0.0, 0.0, 1.0),
 				GLfloat sh = 0 ) :
 			ambient(a),

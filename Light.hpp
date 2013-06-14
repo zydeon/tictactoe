@@ -66,7 +66,7 @@ public:
         glLightf(  id, GL_QUADRATIC_ATTENUATION,quadraticAttenuation );
     }
 
-    void updatePosition(float4 position_, float3 spotDirection_) {
+    void update(float4 position_, float3 spotDirection_) {
         glLightfv( id, GL_POSITION, 		position_.values );
         glLightfv( id, GL_SPOT_DIRECTION,	spotDirection_.values );
     }    
