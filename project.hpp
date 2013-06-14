@@ -46,17 +46,15 @@
 int XSCREEN;
 int YSCREEN;
 
-double toRad(double);
-
 // Callback functions
 void inputMouseCb(int x, int y);
 void inputKeyboardCb(unsigned char key, int x, int y);
-//void inputSpecialCb(int key, int x, int y);
 void display();
 
 // Init functions
 void initControls();
 void initObjects();
+void initLights();
 
 // Drawing functions
 void draw();
@@ -71,5 +69,6 @@ void drawPlayers();
 // Control functions
 void changePlayer();
 GLfloat toDeg(GLfloat rad) ;
+double toRad(double);
 
 #endif

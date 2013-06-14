@@ -9,17 +9,7 @@
 	#include <GL\glut.h>
 #endif
 
-// facilitar passagem por parametro
-class color4{
-public:
-	GLfloat values[4];
-	color4(GLfloat r, GLfloat g, GLfloat b, GLfloat a){
-		values[0] = r;
-		values[1] = g;
-		values[2] = b;
-		values[3] = a;
-	}
-};
+#include "resources.hpp"
 
 class Material {
 private:
@@ -30,8 +20,8 @@ private:
     GLfloat shininess;
 
 public:
-	Material(	color4 a = color4(0.0, 0.0, 0.0, 1.0), 
-				color4 d = color4(0.0, 0.0, 0.0, 1.0),
+	Material(	color4 a = color4(1.0, 1.0, 1.0, 1.0), 
+				color4 d = color4(1.0, 1.0, 1.0, 1.0),
 				color4 s = color4(0.0, 0.0, 0.0, 1.0),
 				color4 e = color4(0.0, 0.0, 0.0, 1.0),
 				GLfloat sh = 0 ) :

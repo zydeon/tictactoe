@@ -6,20 +6,18 @@
 	#include <GL\glut.h>
 #endif
 
-#include "project.hpp"
-#include "lights.hpp"
-
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
+#include "project.hpp"
+#include "resources.hpp"
+#include "Light.hpp"
 
 using namespace std;
 
 GLfloat projAngle = 100;
 GLfloat projNear = 1;
 GLfloat projFar = 70;
-
-double hAng = 45.0;
 
 bool playerX = true;
 
@@ -36,7 +34,7 @@ Surface *wall;
 Surface *ground;
 Fence *f;
 
-
+Light L1;
 
 /*
  * T | Y | U
@@ -56,13 +54,9 @@ int main(int argc, char **argv) {
 	glutInitWindowPosition (XWINDOW_POS, YWINDOW_POS); 
 	glutCreateWindow ("Tic Tac Toe");
 
-
 	XSCREEN = glutGet(GLUT_SCREEN_WIDTH);
 	YSCREEN = glutGet(GLUT_SCREEN_HEIGHT);
 	glClearColor(BLACK);
-	glShadeModel(GL_SMOOTH);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_NORMALIZE);
 
 	initControls();
 	initLights();
@@ -74,6 +68,10 @@ int main(int argc, char **argv) {
 }
 
 void initObjects(){
+	glShadeModel(GL_SMOOTH);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_NORMALIZE);	
+
 	table = new Table(TABLE_W,TABLE_H,TABLE_D,TABLE_F);
 	sky = new Surface(XWORLD, ZWORLD, SKY_BMP, Material() );
 	wall = new Surface(YWORLD, XWORLD, WALLS_BMP, Material() );
@@ -91,7 +89,32 @@ void initObjects(){
 void initControls(){
 	//glutSpecialFunc( inputSpecialCb ); 
 	glutKeyboardFunc(inputKeyboardCb);
-	glutPassiveMotionFunc(inputMouseCb); // A glutPassiveMotionFunc funciona também em linux
+
+	// centrar rato
+	mouseX = XWINDOW/2;
+	mouseY = YWINDOW/2;
+	glutWarpPointer(mouseX, mouseY);
+	glutPassiveMotionFunc(inputMouseCb);
+}
+
+void initLights(){
+	glEnable(GL_LIGHTING);
+
+	// Global ambient model
+	color4 globalAmbientColor = color4(0.3f, 0.3f, 0.3f, 1.0f);
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbientColor.values );
+
+	// Personal focus
+	Light L1 = Light( 	GL_LIGHT0,
+						color4( 1.0, 1.0, 1.0, 1.0 ), 	// ambient
+         				color4( 1.0, 1.0, 1.0, 1.0 ),	// diffuse
+		 				color4( 1.0, 1.0, 1.0, 1.0 ),	// specular
+		 				float4( 0.0, 10.0, 0.0, 1.0 ),	// position 		(will be updated)
+         				float3( 0.0, -1.0, 0.0 ),		// spot direction	(will be updated)
+         				0.0f,							// spot exponent
+         				40.0f							// spot cutoff
+         			);
+	L1.enable();
 }
 
 void inputKeyboardCb(unsigned char key, int x, int y){
@@ -188,11 +211,9 @@ void display(){
 }
 
 void draw(){
-	glEnable(GL_LIGHTING);
-	initLights();
-
+	L1.enable();
 	drawAxis();
-	drawFence();
+	// drawFence();
 	drawFloor();
 	drawWalls();
 	drawSky();

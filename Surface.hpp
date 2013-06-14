@@ -25,9 +25,10 @@ class Surface {
 		GLfloat h, w;
 		GLuint texture;
 		Material material;
-		RgbImage imag;
-		void loadTexture(string im_path);
-
 		// superficie dividida em quadrados de dimensao 'dim'
 		const static GLfloat dim = 0.5f;
+
+		void loadTexture(string im_path);
+		void disableTexture();
+		void enableTexture();
 };

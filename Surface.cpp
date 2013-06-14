@@ -9,17 +9,17 @@ Surface::Surface(GLfloat w_, GLfloat h_, string image, Material m):
 }
 
 void Surface::drawSurface(GLfloat nX, GLfloat nY, GLfloat nZ) {
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,texture);
-	material.apply();
 	GLint i, j;
-	GLfloat W, H; // numero de quadrados unitarios de 'dim'
+	GLfloat W, H; // numero de quadrados unitarios de 'dim'	
+
+	material.apply();
+	enableTexture();
 
 	i = j = 0;
-	glBegin(GL_QUADS);
-
 	W = w / dim;
 	H = h / dim;
+
+	glBegin(GL_QUADS);
 	for( i = 0; i < H; ++i ){
 		for( j = 0; j < W; ++j ){
 			glNormal3f(nX, nY, nZ);
@@ -31,20 +31,37 @@ void Surface::drawSurface(GLfloat nX, GLfloat nY, GLfloat nZ) {
 		}
 	}
 	glEnd();
+
+	disableTexture();
+}
+
+void Surface::enableTexture(){
+	glEnable(GL_TEXTURE_2D);
+
+	glBindTexture(GL_TEXTURE_2D,texture);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);  
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+}
+
+void Surface::disableTexture(){
+	glBindTexture(GL_TEXTURE_2D, 0);
 	glDisable(GL_TEXTURE_2D);
 }
 
 void Surface::loadTexture(string im_path) {
+	RgbImage image;
+
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	imag.LoadBmpFile(im_path.c_str());
-	glTexImage2D(GL_TEXTURE_2D, 0, 3,
-		imag.GetNumCols(),
-		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
-		imag.ImageData());
+	image.LoadBmpFile(im_path.c_str());
+	glTexImage2D(GL_TEXTURE_2D,
+				 0,
+				 3,
+				 image.GetNumCols(),
+				 image.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
+				 image.ImageData() );
+	glBindTexture(GL_TEXTURE_2D, 0); // deactivate
 }

@@ -275,6 +275,9 @@ void Player::loadTextures(bool x) {
 		imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
 		imag.ImageData());
+
+	// deactivate textures
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Player::setZ(GLfloat z_) {
