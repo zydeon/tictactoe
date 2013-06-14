@@ -34,7 +34,7 @@ Surface *wall;
 Surface *ground;
 Fence *f;
 
-Light L1;
+Light L0;
 
 /*
  * T | Y | U
@@ -74,52 +74,19 @@ void initObjects(){
 
 void initLights(){
 	// Global ambient model
-	// color4 globalAmbientColor = color4(0.3f, 0.3f, 0.3f, 1.0f);
-	// glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbientColor.values );
+	color4 globalAmbientColor = color4(0.3f, 0.3f, 0.3f, 1.0f);
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbientColor.values );
 
 	// Personal focus
-	// L1 = Light( 		GL_LIGHT0,
-	// 					color4( 0.0, 0.0, 0.0, 1.0 ), 	// ambient
-	// 					color4( 1.0, 1.0, 1.0, 1.0 ),	// diffuse
-	// 					color4( 1.0, 1.0, 1.0, 1.0 ),	// specular
-	// 					float4( 0.0, 5.0, 0.0, 1.0 ),	// position 		(will be updated)
-	// 					float3( 0.0, -1.0, 0.0 ),		// spot direction	(will be updated)
-	// 					128.0f,							// spot exponent
-	// 					20.0f							// spot cutoff
-	// 				);
-	// L1.enable();
-
-// GLfloat incH =0.0, incV=0.0;
-// GLfloat incMaxH =0.5, incMaxV=0.35;
-// GLfloat focoPini[]= { 0.0, 5.0, 0.0, 1.0 };
-// GLfloat focoDir[] = { 0.0, -1.0, 0.0};
-// GLfloat focoExp   = 10.0;
-// GLfloat focoCut   = 15.0;	
-// GLfloat focoCorEsp[4] ={ 1.0 ,  1.0, 1.0, 1.0}; 
-// GLfloat focoCorDif[4] ={ 0.85, 0.85,0.85, 1.0}; 	
-
-// 	glLightfv(GL_LIGHT1, GL_POSITION,      focoPini );
-// 	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION,focoDir );
-// 	glLightf (GL_LIGHT1, GL_SPOT_EXPONENT ,focoExp);
-// 	glLightf (GL_LIGHT1, GL_SPOT_CUTOFF,   focoCut);
-// 	glLightfv(GL_LIGHT1, GL_DIFFUSE,       focoCorDif );   
-// 	glLightfv(GL_LIGHT1, GL_SPECULAR,      focoCorEsp  );		
-
-GLfloat localCor[4] ={0.2,0.2,0.2,1.0}; 
-GLfloat localCorDif[4] ={ 1, 1, 1, 1.0}; 
-GLfloat localPos[4] ={0, 2, 0, 1.0};
-GLfloat localAttCon =1.0;
-GLfloat localAttLin =0.05;
-GLfloat localAttQua =0.0;
-GLfloat DIR[3] ={ 0, 1, 0}; 
-GLfloat focoExp   = 128.0;
-GLfloat focoCut   = 45.0f;
-
-	glLightfv(GL_LIGHT0, GL_AMBIENT,       localCor );   
-	glLightfv(GL_LIGHT0, GL_DIFFUSE,       localCorDif ); 
-	glLightfv(GL_LIGHT0, GL_POSITION,      localPos );   
-	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION,DIR );
-	glLightf (GL_LIGHT0, GL_SPOT_CUTOFF,   focoCut);	
+	L0 = Light( 		GL_LIGHT0,
+						color4( 0.0, 0.0, 0.0, 1.0 ), 	// ambient
+						color4( 1.0, 1.0, 1.0, 1.0 ),	// diffuse
+						color4( 1.0, 1.0, 1.0, 1.0 ),	// specular
+						float4( 0.0, 10.0, 0.0, 1.0 ),	// position 		(will be updated)
+						float3( 0.0, -1.0, 0.0 ),		// spot direction	(will be updated)
+						128.0f,							// spot exponent
+						20.0f							// spot cutoff
+					);	
 
 }
 
@@ -143,28 +110,13 @@ void display(){
 	gluLookAt(6, 6, 6, 0, 0, 0, 0, 1, 0);
 
 
-GLfloat localCor[4] ={0.2,0.2,0.2,1.0}; 
-GLfloat localCorDif[4] ={ 1, 1, 1, 1.0}; 
-GLfloat localPos[4] ={0, 2, 0, 1.0};
-GLfloat localAttCon =1.0;
-GLfloat localAttLin =0.05;
-GLfloat localAttQua =0.0;
-GLfloat DIR[3] ={ 0, -1, 0}; 
-GLfloat focoExp   = 128.0;
-GLfloat focoCut   = 10.0f;
-
-	glLightfv(GL_LIGHT0, GL_AMBIENT,       localCor );   
-	glLightfv(GL_LIGHT0, GL_DIFFUSE,       localCorDif ); 
-	glLightfv(GL_LIGHT0, GL_POSITION,      localPos );   
-	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION,DIR );
-	glLightf (GL_LIGHT0, GL_SPOT_CUTOFF,   focoCut);
-
 	draw();
 
 	glutSwapBuffers();
 }
 
 void draw(){
+	L0.enable();
 	glEnable(GL_LIGHT0);
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
@@ -172,37 +124,6 @@ void draw(){
 
 	glColor4f(1, 0, 0, 1);
 	glutSolidSphere(1.2, 250, 250);
-
-	// glPushMatrix();
-	// 	glColor4f(1, 1, 1, 1);
-	// 	glTranslatef(0, 2, 0);
-	// 	glutSolidSphere(0.2, 250, 250);
-	// glPopMatrix();	
-
-	glPushMatrix();
-		glColor4f(0, 1, 0, 1);
-		glTranslatef(0, 4, 0);
-		glutSolidSphere(1.2, 250, 250);
-	glPopMatrix();
-
-
-	glPushMatrix();
-		glColor4f(0, 0, 1, 1);
-		glTranslatef(0, -4, 0);
-		glutSolidSphere(1.2, 250, 250);
-	glPopMatrix();
-
-	glPushMatrix();
-		glColor4f(1, 1, 0, 1);
-		glTranslatef(4, 0, 0);
-		glutSolidSphere(1.2, 250, 250);
-	glPopMatrix();		
-
-	glPushMatrix();
-		glColor4f(0, 1, 1, 1);
-		glTranslatef(-4, 0, 0);
-		glutSolidSphere(1.2, 250, 250);
-	glPopMatrix();
 
 	drawAxis();
 
