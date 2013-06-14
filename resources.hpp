@@ -26,7 +26,7 @@ public:
 
 class float3{
 public:
-	GLfloat values[2];
+	GLfloat values[3];
 	float3(GLfloat f1, GLfloat f2, GLfloat f3){
 		values[0] = f1;
 		values[1] = f2;

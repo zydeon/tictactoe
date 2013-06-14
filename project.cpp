@@ -58,9 +58,8 @@ int main(int argc, char **argv) {
 	YSCREEN = glutGet(GLUT_SCREEN_HEIGHT);
 	glClearColor(BLACK);
 
-	initControls();
-	initLights();
 	initObjects();
+	initLights();
 
 	glutDisplayFunc(display);
 	
@@ -70,128 +69,72 @@ int main(int argc, char **argv) {
 void initObjects(){
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_NORMALIZE);	
-
-	table = new Table(TABLE_W,TABLE_H,TABLE_D,TABLE_F);
-	sky = new Surface(XWORLD, ZWORLD, SKY_BMP, Material() );
-	wall = new Surface(YWORLD, XWORLD, WALLS_BMP, Material() );
-	ground = new Surface(XWORLD,ZWORLD, FLOOR_BMP, Material() );
-	f = new Fence(FENCE_W, FENCE_H, FENCE_D);
-	
-	players[0].loadTextures(true);
-	players[0].setZ(5.0);
-	players[1].loadTextures(false);
-	players[1].setZ(-5.0);
-	currPlayerIndex = 0;
-	currPlayer = &players[currPlayerIndex];
-}
-
-void initControls(){
-	//glutSpecialFunc( inputSpecialCb ); 
-	glutKeyboardFunc(inputKeyboardCb);
-
-	// centrar rato
-	mouseX = XWINDOW/2;
-	mouseY = YWINDOW/2;
-	glutWarpPointer(mouseX, mouseY);
-	glutPassiveMotionFunc(inputMouseCb);
+	// glEnable(GL_NORMALIZE);
 }
 
 void initLights(){
-	glEnable(GL_LIGHTING);
-
 	// Global ambient model
-	color4 globalAmbientColor = color4(0.3f, 0.3f, 0.3f, 1.0f);
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbientColor.values );
+	// color4 globalAmbientColor = color4(0.3f, 0.3f, 0.3f, 1.0f);
+	// glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbientColor.values );
 
 	// Personal focus
-	Light L1 = Light( 	GL_LIGHT0,
-						color4( 1.0, 1.0, 1.0, 1.0 ), 	// ambient
-         				color4( 1.0, 1.0, 1.0, 1.0 ),	// diffuse
-		 				color4( 1.0, 1.0, 1.0, 1.0 ),	// specular
-		 				float4( 0.0, 10.0, 0.0, 1.0 ),	// position 		(will be updated)
-         				float3( 0.0, -1.0, 0.0 ),		// spot direction	(will be updated)
-         				0.0f,							// spot exponent
-         				40.0f							// spot cutoff
-         			);
-	L1.enable();
-}
+	// L1 = Light( 		GL_LIGHT0,
+	// 					color4( 0.0, 0.0, 0.0, 1.0 ), 	// ambient
+	// 					color4( 1.0, 1.0, 1.0, 1.0 ),	// diffuse
+	// 					color4( 1.0, 1.0, 1.0, 1.0 ),	// specular
+	// 					float4( 0.0, 5.0, 0.0, 1.0 ),	// position 		(will be updated)
+	// 					float3( 0.0, -1.0, 0.0 ),		// spot direction	(will be updated)
+	// 					128.0f,							// spot exponent
+	// 					20.0f							// spot cutoff
+	// 				);
+	// L1.enable();
 
-void inputKeyboardCb(unsigned char key, int x, int y){
+// GLfloat incH =0.0, incV=0.0;
+// GLfloat incMaxH =0.5, incMaxV=0.35;
+// GLfloat focoPini[]= { 0.0, 5.0, 0.0, 1.0 };
+// GLfloat focoDir[] = { 0.0, -1.0, 0.0};
+// GLfloat focoExp   = 10.0;
+// GLfloat focoCut   = 15.0;	
+// GLfloat focoCorEsp[4] ={ 1.0 ,  1.0, 1.0, 1.0}; 
+// GLfloat focoCorDif[4] ={ 0.85, 0.85,0.85, 1.0}; 	
 
-    switch (key) {
-		case 27:
-			exit(0);
-		break;
-		
-		case 'w':
-			currPlayer->x -= Player::velocity * sin(currPlayer->angY);
-			currPlayer->z -= Player::velocity * cos(currPlayer->angY);
-		break;
-		case 's':
-			currPlayer->x += Player::velocity * sin(currPlayer->angY);
-			currPlayer->z += Player::velocity * cos(currPlayer->angY);
-		break;
-		case 'a':
-			currPlayer->x += Player::velocity * sin(currPlayer->angY-PI/2);
-			currPlayer->z += Player::velocity * cos(currPlayer->angY-PI/2);
-		break;
-		case 'd':
-			currPlayer->x += Player::velocity * sin(currPlayer->angY+PI/2);
-			currPlayer->z += Player::velocity * cos(currPlayer->angY+PI/2);
-		break;
-		
-		case 'x': changePlayer(); break;
-		
-		case 't': table->makeMove(playerX, 0); break;
-		case 'y': table->makeMove(playerX, 1); break;
-		case 'u': table->makeMove(playerX, 2); break;
-		case 'g': table->makeMove(playerX, 3); break;
-		case 'h': table->makeMove(playerX, 4); break;
-		case 'j': table->makeMove(playerX, 5); break;
-		case 'b': table->makeMove(playerX, 6); break;
-		case 'n': table->makeMove(playerX, 7); break;
-		case 'm': table->makeMove(playerX, 8); break;
-   	}	
-	glutPostRedisplay();
-}
+// 	glLightfv(GL_LIGHT1, GL_POSITION,      focoPini );
+// 	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION,focoDir );
+// 	glLightf (GL_LIGHT1, GL_SPOT_EXPONENT ,focoExp);
+// 	glLightf (GL_LIGHT1, GL_SPOT_CUTOFF,   focoCut);
+// 	glLightfv(GL_LIGHT1, GL_DIFFUSE,       focoCorDif );   
+// 	glLightfv(GL_LIGHT1, GL_SPECULAR,      focoCorEsp  );		
 
-void changePlayer() {
-	playerX = !playerX;
-	currPlayerIndex = (currPlayerIndex + 1) % 2;
-	currPlayer = &players[currPlayerIndex];
-}
+GLfloat localCor[4] ={0.1,0.1,0.1,1.0}; 
+GLfloat localCorDif[4] ={ 1, 1, 1, 1.0}; 
+GLfloat localPos[4] ={0, 2, 0, 1.0};
+GLfloat localAttCon =1.0;
+GLfloat localAttLin =0.05;
+GLfloat localAttQua =0.0;
+GLfloat DIR[3] ={ 0, -1, 0}; 
+GLfloat focoExp   = 128.0;
+GLfloat focoCut   = 45;
 
-void inputMouseCb(int x, int y){
-	currPlayer->angX += (mouseY-y) * Player::sensitivity ;
-	currPlayer->angY += (mouseX-x) * Player::sensitivity ;
-	if(currPlayer->angX > PI/2) currPlayer->angX = PI/2;
-	if(currPlayer->angX < -PI/2) currPlayer->angX = -PI/2;
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
 
-	// fake continuous movement
-	if( x == -XWINDOW_POS )  // limite esquerdo
-		mouseX++;
-	else if( x == XSCREEN-XWINDOW_POS )  // limite direito
-		mouseX--;
-	else mouseX = x;
-	if( y == -YWINDOW_POS )  // limite cima
-		mouseY++;
-	else if( y == YSCREEN-YWINDOW_POS )  // limite direito
-		mouseY--;
-	else mouseY = y;
+	glLightfv(GL_LIGHT0, GL_POSITION,      localPos );   
+	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION,DIR );
+	glLightf (GL_LIGHT0, GL_SPOT_EXPONENT ,focoExp);
+	glLightf (GL_LIGHT0, GL_SPOT_CUTOFF,   focoCut);	
+	glLightfv(GL_LIGHT0, GL_AMBIENT,       localCor );   
+	glLightfv(GL_LIGHT0, GL_DIFFUSE,       localCorDif ); 
 
-	glutPostRedisplay();	
 }
 
 void display(){
-
- 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Viewport
 	glViewport(0,0,XWINDOW,YWINDOW);
 	
 	// Projecao
- 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	glViewport(0,0,XWINDOW, YWINDOW);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -201,9 +144,7 @@ void display(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	gluLookAt(currPlayer->x, currPlayer->y, currPlayer->z,
-			   currPlayer->getRefX(), currPlayer->getRefY(), currPlayer->getRefZ(),
-				0,1,0);
+	gluLookAt(6, 6, 6, 0, 0, 0, 0, 1, 0);
 
 	draw();
 
@@ -211,48 +152,47 @@ void display(){
 }
 
 void draw(){
-	L1.enable();
+	glEnable(GL_LIGHT0);
+	glEnable(GL_COLOR_MATERIAL);
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
+	glEnable(GL_LIGHTING);
+
+	glColor4f(1, 0, 0, 1);
+	glutSolidSphere(1.2, 250, 250);
+
+	glPushMatrix();
+		glColor4f(1, 1, 1, 1);
+		glTranslatef(0, 2, 0);
+		glutSolidSphere(0.2, 250, 250);
+	glPopMatrix();	
+
+	glPushMatrix();
+		glColor4f(0, 1, 0, 1);
+		glTranslatef(0, 4, 0);
+		glutSolidSphere(1.2, 250, 250);
+	glPopMatrix();
+
+
+	glPushMatrix();
+		glColor4f(0, 0, 1, 1);
+		glTranslatef(0, -4, 0);
+		glutSolidSphere(1.2, 250, 250);
+	glPopMatrix();
+
+	glPushMatrix();
+		glColor4f(1, 1, 0, 1);
+		glTranslatef(4, 0, 0);
+		glutSolidSphere(1.2, 250, 250);
+	glPopMatrix();		
+
+	glPushMatrix();
+		glColor4f(0, 1, 1, 1);
+		glTranslatef(-4, 0, 0);
+		glutSolidSphere(1.2, 250, 250);
+	glPopMatrix();
+
 	drawAxis();
-	// drawFence();
-	drawFloor();
-	drawWalls();
-	drawSky();
-	// drawTable();
-	drawPlayers();
 
-}
-
-void drawSky() {
-	glPushMatrix();
-		glTranslatef(0.0,YWORLD, 0.0);
-		glRotatef(-90.0,1.0,0.0,0.0);
-		sky->drawSurface(0, -1, 0);
-	glPopMatrix();
-}
-
-void drawWalls() {
-	glPushMatrix();
-		glTranslatef(0, YWORLD/2, -ZWORLD/2);
-		wall->drawSurface(0,0,1);
-	glPopMatrix();
-	
-	glPushMatrix();
-		glTranslatef(-XWORLD/2, YWORLD/2, 0.0);
-		glRotatef(90.0,0.0,1.0,0.0);
-		wall->drawSurface(1,0,0);
-	glPopMatrix();
-	
-	glPushMatrix();
-		glTranslatef(XWORLD/2, YWORLD/2, 0.0);
-		glRotatef(-90.0,0.0,1.0,0.0);
-		wall->drawSurface(-1,0,0);
-	glPopMatrix();
-	
-	glPushMatrix();
-		glTranslatef(0.0, YWORLD/2, ZWORLD/2);
-		glRotatef(180.0,0.0,1.0,0.0);
-		wall->drawSurface(0,0,-1);
-	glPopMatrix();
 }
 
 void drawFloor() {
@@ -261,15 +201,8 @@ void drawFloor() {
 		ground->drawSurface(0, 1, 0);
 	glPopMatrix();
 }
-
-void drawTable() {
-	glPushMatrix();
-		table->drawTable();
-	glPopMatrix();
-}
-
 void drawAxis() {
-	glColor3f(0.0, 1.0, 0.0);
+	glColor3f(1.0f, 1.0f, 1.0f);
 	glBegin(GL_LINES);
 		glVertex3i(-XWORLD/2,0,0);
 		glVertex3i(XWORLD/2,0,0);
@@ -278,105 +211,4 @@ void drawAxis() {
 		glVertex3i(0,0,-ZWORLD/2);
 		glVertex3i(0,0,ZWORLD/2);
 	glEnd();
-}
-
-void drawFence() {
-	int numberOfFences = SQUARESIZE/FENCE_W;
-	
-	//FIX THIS
-	double difference = SQUARESIZE-numberOfFences*FENCE_W;
-	
-	bool corner = difference > 0.1;
-	
-	int i;
-	
-	glPushMatrix();
-	
-	glTranslatef(0.0,FENCE_H/2, 0.0);
-
-	for(i = 0; i < numberOfFences; i++) {
-		glPushMatrix();
-			glTranslatef(-SQUARESIZE/2+i*FENCE_W, 0.0, -SQUARESIZE/2);
-			f->drawFence();
-		glPopMatrix();
-	}
-	if(corner) {
-		glPushMatrix();
-			glTranslatef(-SQUARESIZE/2+numberOfFences*FENCE_W-difference/4, 0.0, -SQUARESIZE/2);
-			f->drawSmallPiece(difference);
-			glColor3f(1.0,1.0,1.0);
-			glBegin(GL_LINES);
-			glVertex3f(0.0,0.0,0.0);
-			glVertex3f(difference,0.0,0.0);
-			glEnd();
-		glPopMatrix();
-	}
-	
-	for(i = 0; i < numberOfFences; i++) {
-		glPushMatrix();
-			glTranslatef(SQUARESIZE/2-FENCE_W/2, 0.0, i*FENCE_W-SQUARESIZE/2);
-			glRotatef(90.0, 0, 1 , 0);
-			f->drawFence();
-		glPopMatrix();
-	}
-	if(corner) {
-		glPushMatrix();
-			glTranslatef(SQUARESIZE/2, 0.0, numberOfFences*FENCE_W-difference/4-SQUARESIZE/2);
-			glRotatef(90.0, 0, 1 , 0);
-			f->drawSmallPiece(difference);
-		glPopMatrix();
-	}
-	
-	for(i = 0; i < numberOfFences; i++) {
-		glPushMatrix();
-			glTranslatef(-SQUARESIZE/2, 0.0, i*FENCE_W-SQUARESIZE/2);
-			glRotatef(-90.0, 0, 1 , 0);
-			f->drawFence();
-		glPopMatrix();
-	}
-	if(corner) {
-		glPushMatrix();
-			glTranslatef(-SQUARESIZE/2, 0.0, numberOfFences*FENCE_W-difference/4-SQUARESIZE/2);
-			glRotatef(-90.0, 0, 1 , 0);
-			f->drawSmallPiece(difference);
-		glPopMatrix();
-	}
-	
-	for(i = 0; i < numberOfFences; i++) {
-		glPushMatrix();
-			glTranslatef(i*FENCE_W-SQUARESIZE/2, 0.0, SQUARESIZE/2);
-			glRotatef(180, 0, 1 , 0);
-			f->drawFence();
-		glPopMatrix();
-	}
-	if(corner) {
-		glPushMatrix();
-			glTranslatef(numberOfFences*FENCE_W-difference/4-SQUARESIZE/2, 0.0, SQUARESIZE/2);
-			glRotatef(180, 0, 1 , 0);
-			f->drawSmallPiece(difference);
-		glPopMatrix();
-	}
-	
-	glPopMatrix();
-}
-
-void drawPlayers() {
-	glPushMatrix();
-		glTranslatef(players[0].x, players[0].y, players[0].z);
-		glRotatef(toDeg(players[0].angY)+180 ,0,1,0);
-		players[0].drawPlayer();
-	glPopMatrix();
-	glPushMatrix();
-		glTranslatef(players[1].x, players[1].y, players[1].z);
-		glRotatef(toDeg(players[1].angY)+180 ,0,1,0);
-		players[1].drawPlayer();
-	glPopMatrix();
-}
-
-double toRad(double deg) {
-	return (PI*deg)/180;
-}
-
-GLfloat toDeg(GLfloat rad) {
-	return 180*rad/PI;
 }

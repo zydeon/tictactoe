@@ -36,10 +36,10 @@ public:
          , float3 spotDirection_ 		= float3( 0.0, 0.0, 1.0 )
          , float  spotExponent_			= 0.0
          , float  spotCutOff_ 			= 180.0f
-         , float  constantAttenuation_ 	= 1.0
-         , float  linearAttenuation_ 	= 0.0
-         , float  quadraticAttenuation_ = 0.0 )
-        : id ( id )
+         , float  constantAttenuation_ 	= 1.0f
+         , float  linearAttenuation_ 	= 0.05f
+         , float  quadraticAttenuation_ = 0.0f )
+        : id ( id_ )
         , ambient( ambient_ )
         , diffuse( diffuse_ )
         , specular( specular_ )
@@ -61,11 +61,9 @@ public:
         glLightfv( id, GL_SPOT_DIRECTION, 		spotDirection.values );
         glLightf(  id, GL_SPOT_EXPONENT, 		spotExponent );
         glLightf(  id, GL_SPOT_CUTOFF, 			spotCutOff );
-        glLightf(  id, GL_CONSTANT_ATTENUATION, constantAttenuation );
-        glLightf(  id, GL_LINEAR_ATTENUATION, 	linearAttenuation );
-        glLightf(  id, GL_QUADRATIC_ATTENUATION,quadraticAttenuation );
-
-        printf("%f %f %f\n", position.values[0], position.values[1], position.values[2]);
+        // glLightf(  id, GL_CONSTANT_ATTENUATION, constantAttenuation );
+        // glLightf(  id, GL_LINEAR_ATTENUATION, 	linearAttenuation );
+        // glLightf(  id, GL_QUADRATIC_ATTENUATION,quadraticAttenuation );
     }
 
     void updatePosition(float4 position_, float3 spotDirection_) {
