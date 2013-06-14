@@ -70,22 +70,28 @@ void initObjects(){
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_NORMALIZE);
+
+	ground = new Surface(XWORLD,ZWORLD, FLOOR_BMP, Material(color4(1 ,1 ,1, 1.0),
+															color4(1 ,1 ,1, 1.0),
+															color4(1 ,1 ,1, 1.0)
+															) );
 }
 
 void initLights(){
+	glEnable(GL_LIGHTING);
 	// Global ambient model
 	color4 globalAmbientColor = color4(0.3f, 0.3f, 0.3f, 1.0f);
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbientColor.values );
 
 	// Personal focus
 	L0 = Light( 		GL_LIGHT0,
-						color4( 0.0, 0.0, 0.0, 1.0 ), 	// ambient
-						color4( 1.0, 1.0, 1.0, 1.0 ),	// diffuse
-						color4( 1.0, 1.0, 1.0, 1.0 ),	// specular
-						float4( 0.0, 10.0, 0.0, 1.0 ),	// position 		(will be updated)
+						color4( 0.2, 0.2, 0.2, 1.0 ), 	// ambient
+						color4( 0.8, 0.8, 0.8, 1.0 ),	// diffuse
+						color4( 0.0, 0.0, 1.0, 1.0 ),	// specular
+						float4( 0.0, 20.0, 0.0, 1.0 ),	// position 		(will be updated)
 						float3( 0.0, -1.0, 0.0 ),		// spot direction	(will be updated)
 						128.0f,							// spot exponent
-						20.0f							// spot cutoff
+						60.0f							// spot cutoff
 					);	
 
 }
@@ -107,7 +113,7 @@ void display(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	gluLookAt(6, 6, 6, 0, 0, 0, 0, 1, 0);
+	gluLookAt(0, 5, 5, 0, 0, 0, 0, 1, 0);
 
 
 	draw();
@@ -117,26 +123,28 @@ void display(){
 
 void draw(){
 	L0.enable();
-	glEnable(GL_LIGHT0);
-	glEnable(GL_COLOR_MATERIAL);
-	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
-	glEnable(GL_LIGHTING);
 
-	glColor4f(1, 0, 0, 1);
-	glutSolidSphere(1.2, 250, 250);
+	// glEnable(GL_COLOR_MATERIAL);
+		// glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
+		// glColor4f(1, 0, 0, 1);
+		// glutSolidSphere(1.2, 250, 250);
+	// glDisable(GL_COLOR_MATERIAL);
+
+	drawFloor();
 
 	drawAxis();
-
+	L0.disable();
 }
 
 void drawFloor() {
 	glPushMatrix();
-		glRotatef(90.0, 1.0, 0.0, 0.0);
-		ground->drawSurface(0, 1, 0);
+		glRotatef(-90.0, 1.0, 0.0, 0.0);
+		ground->drawSurface();
 	glPopMatrix();
 }
 void drawAxis() {
-	glColor3f(1.0f, 1.0f, 1.0f);
+	glDisable(GL_LIGHTING);
+	glColor3f(1.0f, 0.0f, 1.0f);
 	glBegin(GL_LINES);
 		glVertex3i(-XWORLD/2,0,0);
 		glVertex3i(XWORLD/2,0,0);
@@ -145,4 +153,5 @@ void drawAxis() {
 		glVertex3i(0,0,-ZWORLD/2);
 		glVertex3i(0,0,ZWORLD/2);
 	glEnd();
+	glEnable(GL_LIGHTING);
 }

@@ -8,7 +8,7 @@ Surface::Surface(GLfloat w_, GLfloat h_, string image, Material m):
 	loadTexture(image);
 }
 
-void Surface::drawSurface(GLfloat nX, GLfloat nY, GLfloat nZ) {
+void Surface::drawSurface() {
 	GLint i, j;
 	GLfloat W, H; // numero de quadrados unitarios de 'dim'	
 
@@ -22,7 +22,7 @@ void Surface::drawSurface(GLfloat nX, GLfloat nY, GLfloat nZ) {
 	glBegin(GL_QUADS);
 	for( i = 0; i < H; ++i ){
 		for( j = 0; j < W; ++j ){
-			glNormal3f(nX, nY, nZ);
+			glNormal3f(0, 0, 1);
 			// face visivel sempre a da frente (considerar coordenadas da textura de 0 a 1)
 			glTexCoord2f(j/W, i/H); 		glVertex3f(j*dim-w/2, i*dim-h/2, 0.0);
 			glTexCoord2f((j+1)/W, i/H); 	glVertex3f((j+1)*dim-w/2, i*dim-h/2, 0.0);
@@ -33,6 +33,21 @@ void Surface::drawSurface(GLfloat nX, GLfloat nY, GLfloat nZ) {
 	glEnd();
 
 	disableTexture();
+
+	glDisable(GL_LIGHTING);
+	GLfloat x, y;
+	glColor3f(0.8, 0.8, 0.8);
+	glBegin(GL_LINES);
+		for( x = -h/2; x < h/2; x+=dim ){
+			glVertex3f(-w/2, x, 1);
+			glVertex3f(w/2, x, 1);
+		}
+		for( y = -w/2; y < w/2; y+=dim ){
+			glVertex3f(y, -h/2, 1);
+			glVertex3f(y, h/2, 1);
+		}		
+	glEnd();
+	glEnable(GL_LIGHTING);
 }
 
 void Surface::enableTexture(){
@@ -42,8 +57,8 @@ void Surface::enableTexture(){
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);  
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
 void Surface::disableTexture(){

@@ -20,7 +20,7 @@ using namespace std;
 class Surface {
 	public:
 		Surface(GLfloat w_, GLfloat h_, string image, Material m);
-		void drawSurface(GLfloat nX, GLfloat nY, GLfloat nZ);
+		void drawSurface();
 	private:
 		GLfloat h, w;
 		GLuint texture;

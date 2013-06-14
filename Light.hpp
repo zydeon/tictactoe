@@ -61,9 +61,9 @@ public:
         glLightfv( id, GL_SPOT_DIRECTION, 		spotDirection.values );
         glLightf(  id, GL_SPOT_EXPONENT, 		spotExponent );
         glLightf(  id, GL_SPOT_CUTOFF, 			spotCutOff );
-        // glLightf(  id, GL_CONSTANT_ATTENUATION, constantAttenuation );
-        // glLightf(  id, GL_LINEAR_ATTENUATION, 	linearAttenuation );
-        // glLightf(  id, GL_QUADRATIC_ATTENUATION,quadraticAttenuation );
+        glLightf(  id, GL_CONSTANT_ATTENUATION, constantAttenuation );
+        glLightf(  id, GL_LINEAR_ATTENUATION, 	linearAttenuation );
+        glLightf(  id, GL_QUADRATIC_ATTENUATION,quadraticAttenuation );
     }
 
     void updatePosition(float4 position_, float3 spotDirection_) {
