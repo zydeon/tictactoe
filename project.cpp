@@ -69,7 +69,7 @@ int main(int argc, char **argv) {
 void initObjects(){
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_DEPTH_TEST);
-	// glEnable(GL_NORMALIZE);
+	glEnable(GL_NORMALIZE);
 }
 
 void initLights(){
@@ -105,25 +105,21 @@ void initLights(){
 // 	glLightfv(GL_LIGHT1, GL_DIFFUSE,       focoCorDif );   
 // 	glLightfv(GL_LIGHT1, GL_SPECULAR,      focoCorEsp  );		
 
-GLfloat localCor[4] ={0.1,0.1,0.1,1.0}; 
+GLfloat localCor[4] ={0.2,0.2,0.2,1.0}; 
 GLfloat localCorDif[4] ={ 1, 1, 1, 1.0}; 
 GLfloat localPos[4] ={0, 2, 0, 1.0};
 GLfloat localAttCon =1.0;
 GLfloat localAttLin =0.05;
 GLfloat localAttQua =0.0;
-GLfloat DIR[3] ={ 0, -1, 0}; 
+GLfloat DIR[3] ={ 0, 1, 0}; 
 GLfloat focoExp   = 128.0;
-GLfloat focoCut   = 45;
+GLfloat focoCut   = 45.0f;
 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	glLightfv(GL_LIGHT0, GL_POSITION,      localPos );   
-	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION,DIR );
-	glLightf (GL_LIGHT0, GL_SPOT_EXPONENT ,focoExp);
-	glLightf (GL_LIGHT0, GL_SPOT_CUTOFF,   focoCut);	
 	glLightfv(GL_LIGHT0, GL_AMBIENT,       localCor );   
 	glLightfv(GL_LIGHT0, GL_DIFFUSE,       localCorDif ); 
+	glLightfv(GL_LIGHT0, GL_POSITION,      localPos );   
+	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION,DIR );
+	glLightf (GL_LIGHT0, GL_SPOT_CUTOFF,   focoCut);	
 
 }
 
@@ -146,6 +142,23 @@ void display(){
 
 	gluLookAt(6, 6, 6, 0, 0, 0, 0, 1, 0);
 
+
+GLfloat localCor[4] ={0.2,0.2,0.2,1.0}; 
+GLfloat localCorDif[4] ={ 1, 1, 1, 1.0}; 
+GLfloat localPos[4] ={0, 2, 0, 1.0};
+GLfloat localAttCon =1.0;
+GLfloat localAttLin =0.05;
+GLfloat localAttQua =0.0;
+GLfloat DIR[3] ={ 0, -1, 0}; 
+GLfloat focoExp   = 128.0;
+GLfloat focoCut   = 10.0f;
+
+	glLightfv(GL_LIGHT0, GL_AMBIENT,       localCor );   
+	glLightfv(GL_LIGHT0, GL_DIFFUSE,       localCorDif ); 
+	glLightfv(GL_LIGHT0, GL_POSITION,      localPos );   
+	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION,DIR );
+	glLightf (GL_LIGHT0, GL_SPOT_CUTOFF,   focoCut);
+
 	draw();
 
 	glutSwapBuffers();
@@ -160,11 +173,11 @@ void draw(){
 	glColor4f(1, 0, 0, 1);
 	glutSolidSphere(1.2, 250, 250);
 
-	glPushMatrix();
-		glColor4f(1, 1, 1, 1);
-		glTranslatef(0, 2, 0);
-		glutSolidSphere(0.2, 250, 250);
-	glPopMatrix();	
+	// glPushMatrix();
+	// 	glColor4f(1, 1, 1, 1);
+	// 	glTranslatef(0, 2, 0);
+	// 	glutSolidSphere(0.2, 250, 250);
+	// glPopMatrix();	
 
 	glPushMatrix();
 		glColor4f(0, 1, 0, 1);
