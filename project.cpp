@@ -9,6 +9,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "project.hpp"
 #include "resources.hpp"
 #include "Light.hpp"
@@ -35,6 +36,8 @@ Surface *ground;
 Fence *f;
 
 Light L0;
+
+char nearTable;
 
 /*
  * T | Y | U
@@ -152,7 +155,24 @@ void inputKeyboardCb(unsigned char key, int x, int y){
 		case 'n': table->makeMove(playerX, 7); break;
 		case 'm': table->makeMove(playerX, 8); break;
 	}       
+
+	checkCollisions();
 	glutPostRedisplay();
+}
+
+double distance_(float3 p1, float3 p2){
+	return sqrt( (p1.values[0]-p2.values[0])*(p1.values[0]-p2.values[0]) +
+				 (p1.values[1]-p2.values[1])*(p1.values[1]-p2.values[1]) +
+				 (p1.values[2]-p2.values[2])*(p1.values[2]-p2.values[2]) );
+}
+
+void checkCollisions(){
+	float3 currPosition = float3(currPlayer->x, currPlayer->y, currPlayer->z);
+
+	// se estiver perto da mesa
+	nearTable = distance_(currPosition, float3(0,0,0)) < 5;
+
+	// TODO RESTO DAS COLISOES
 }
 
 void changePlayer() {
@@ -186,40 +206,52 @@ void inputMouseCb(int x, int y){
 void display(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	//--- 3D
 	// Viewport
 	glViewport(0,0,XWINDOW,YWINDOW);
-	
 	// Projecao
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	glViewport(0,0,XWINDOW, YWINDOW);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(projAngle, XWINDOW/YWINDOW, projNear, projFar);
-	
 	// Observador
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(	currPlayer->x, currPlayer->y, currPlayer->z,
 				currPlayer->getRefX(), currPlayer->getRefY(), currPlayer->getRefZ(),
 				0, 1, 0);
-
 	draw();
+
+
+	if(nearTable){
+		//--- 2D
+		// Viewport
+		glViewport(0,0,200, 200);
+		// Projecao
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho( -1,1, -1,1, 2,0 );
+		// Observador
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		gluLookAt(0,3,0, 0,0,0, 0,0,-1);
+		draw();	
+	}
 
 	glutSwapBuffers();
 }
 
 void draw(){
-
 	L0.update( 	float4(currPlayer->x, currPlayer->y, currPlayer->z, 1),
 				float3(-sin(currPlayer->angY), sin(currPlayer->angX), -cos(currPlayer->angY)) );
 	L0.enable();
 		drawFence();
-		drawFloor();
 		drawWalls();
 		drawSky();
-		drawTable();
+		// drawFloor();
 		drawPlayers();
-		drawFloor();
+		drawTable();
 
 		drawAxis();
 	L0.disable();
@@ -274,12 +306,12 @@ void drawAxis() {
 	glDisable(GL_LIGHTING);
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glBegin(GL_LINES);
-		glVertex3i(-XWORLD/2,1,0);
-		glVertex3i(XWORLD/2,1,0);
+		glVertex3i(-XWORLD/2,0.4,0);
+		glVertex3i(XWORLD/2,0.4,0);
 		glVertex3i(0,-YWORLD/2,0);
 		glVertex3i(0,YWORLD/2,0);
-		glVertex3i(0,1,-ZWORLD/2);
-		glVertex3i(0,1,ZWORLD/2);
+		glVertex3i(0,0.4,-ZWORLD/2);
+		glVertex3i(0,0.4,ZWORLD/2);
 	glEnd();
 	glEnable(GL_LIGHTING);
 }

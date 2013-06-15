@@ -8,6 +8,7 @@
 #include "Surface.hpp"
 #include "Player.hpp"
 #include "Table.hpp"
+#include "resources.hpp"
 
 #define RED   	 1.0, 0.0, 0.0, 1.0
 #define GREEN 	 0.0, 1.0, 0.0, 1.0
@@ -68,7 +69,11 @@ void drawPlayers();
 
 // Control functions
 void changePlayer();
+void checkCollisions();
+
+// Help functions
 GLfloat toDeg(GLfloat rad) ;
 double toRad(double);
+double distance_(float3 p1, float3 p2);
 
 #endif
