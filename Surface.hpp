@@ -1,3 +1,6 @@
+#ifndef SURFACE_HPP
+#define SURFACE_HPP
+
 
 #ifdef __linux__
 	#include <GL/glut.h>
@@ -16,10 +19,11 @@ using namespace std;
 #define FLOOR_BMP 	"textures/grass.bmp"
 #define WALLS_BMP 	"textures/parede1.bmp"
 #define SKY_BMP 	"textures/sky.bmp"
+#define GLASS_BMP 	"textures/glass.bmp"
 
 class Surface {
 	public:
-		Surface(GLfloat w_, GLfloat h_, string image, Material m);
+		Surface(GLfloat w_, GLfloat h_, string image, Material m);  // with texture
 		void drawSurface();
 	private:
 		GLfloat h, w;
@@ -32,3 +36,6 @@ class Surface {
 		void disableTexture();
 		void enableTexture();
 };
+
+
+#endif

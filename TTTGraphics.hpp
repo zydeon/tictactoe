@@ -1,3 +1,6 @@
+#ifndef TTTGRAPHICS_HPP
+#define TTTGRAPHICS_HPP
+
 #ifdef __linux__
 	#include <GL/glut.h>
 #elif defined __APPLE__
@@ -8,6 +11,7 @@
 
 #include "TicTacToe.hpp"
 #include "RgbImage.h"
+#include "Surface.hpp"
 
 #define BLUE_BMP "textures/blue.bmp"
 #define RED_BMP "textures/red.bmp"
@@ -20,6 +24,7 @@ class TTTGraphics {
 		void loadTextures();
 		
 	private:
+		Surface *board;
 		GLfloat size;
 		TicTacToe *ttt;
 		GLuint texture[2];
@@ -28,4 +33,8 @@ class TTTGraphics {
 		void drawPieces();
 		void drawX();
 		void drawO();
+		void drawPiece();
 };
+
+
+#endif

@@ -2,16 +2,63 @@
 
 TTTGraphics::TTTGraphics(GLfloat size_) {
 	size = size_;
+	board = new Surface(size, size, GLASS_BMP, Material(
+														color4(1, 1, 1, 1),
+														color4(1, 1, 1, 0.5)
+		) ) ;
 	ttt = new TicTacToe();
 	loadTextures();
 }
 
 void TTTGraphics::drawGame() {
 	glPushMatrix();
+
+		glPushMatrix();
+			glTranslatef(0, 0, -0.4);
+			drawPiece();
+		glPopMatrix();
+
+		// Reflection
+		glEnable(GL_STENCIL_TEST); 	//Activa o uso do stencil buffer
+		glColorMask(0, 0, 0, 0); 	// Desenha so no stencil buffer (definir area)
+		glDisable(GL_DEPTH_TEST);	// better performance
+		
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+		glStencilFunc(GL_ALWAYS, 1, 1);
+		board->drawSurface();				// define area (pixels value = 1)
+
+		glColorMask(1, 1, 1, 1);
+		glEnable(GL_DEPTH_TEST);
+
+		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+		glStencilFunc(GL_EQUAL, 1, 1);
+
+		// replicate objects
+		glPushMatrix();
+			glScalef(1, 1, -1);
+			glTranslatef(0, 0, -0.4);
+			drawPiece();
+		glPopMatrix();
+
+		glDisable(GL_STENCIL_TEST);
+
+		// desenhar superficie reflectora
+		glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			board->drawSurface();
+		glDisable(GL_BLEND);
+
 		glTranslatef(-size/2,-size/2,0);
-		drawLines();
-		drawPieces();
+		// drawLines();
+		// drawPieces();
 	glPopMatrix();
+}
+
+void TTTGraphics::drawPiece(){
+	glDisable(GL_LIGHTING);
+	glColor3f(1,0,0);
+	glutWireCube(0.2);
+	glEnable(GL_LIGHTING);
 }
 
 void TTTGraphics::drawLines() {

@@ -35,7 +35,7 @@ Surface *wall;
 Surface *ground;
 Fence *f;
 
-Light L0;
+Light L0, L1;
 
 char nearTable;
 
@@ -52,7 +52,7 @@ char nearTable;
  
 int main(int argc, char **argv) {
 	glutInit(&argc, argv);
-	glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH );
+	glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH  | GLUT_STENCIL);
 	glutInitWindowSize (XWINDOW, YWINDOW); 
 	glutInitWindowPosition (XWINDOW_POS, YWINDOW_POS); 
 	glutCreateWindow ("Tic Tac Toe");
@@ -92,7 +92,7 @@ void initObjects(){
 void initLights(){
 	glEnable(GL_LIGHTING);
 	// Global ambient model
-	color4 globalAmbientColor = color4(0.6f, 0.6f, 0.6f, 1.0f);
+	color4 globalAmbientColor = color4(0.7f, 0.7f, 0.7f, 1.0f);
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbientColor.values );
 
 	// Personal focus
@@ -101,10 +101,21 @@ void initLights(){
 						color4( 0.8, 0.8, 0.8, 1.0 ),	// diffuse
 						color4( 1.0, 1.0, 0.0, 1.0 ),	// specular
 						float4( 0.0, 20.0, 0.0, 1.0 ),	// position 		(will be updated)
-						float3( 0.0, 1.0, 0.0 ),		// spot direction	(will be updated)
+						float3( 0.0, -1.0, 0.0 ),		// spot direction	(will be updated)
 						128,							// spot exponent
 						80.0f							// spot cutoff
 					);	
+
+	// lamp
+	L1 = Light( 		GL_LIGHT1,
+						color4( 0.2, 0, 0, 1.0 ), 	// ambient
+						color4( 0.8, 0, 0, 1.0 ),	// diffuse
+						color4( 1.0, 1.0, 0.0, 1.0 ),	// specular
+						float4( 0.0, 10.0, 0.0, 1.0 ),	// position 		(will be updated)
+						float3( 0.0, -1.0, 0.0 ),		// spot direction	(will be updated)
+						128,							// spot exponent
+						60.0f							// spot cutoff
+					);
 
 }
 
@@ -145,15 +156,15 @@ void inputKeyboardCb(unsigned char key, int x, int y){
 		
 		case 'x': changePlayer(); break;
 		
-		case 't': table->makeMove(playerX, 0); break;
-		case 'y': table->makeMove(playerX, 1); break;
-		case 'u': table->makeMove(playerX, 2); break;
-		case 'g': table->makeMove(playerX, 3); break;
-		case 'h': table->makeMove(playerX, 4); break;
-		case 'j': table->makeMove(playerX, 5); break;
-		case 'b': table->makeMove(playerX, 6); break;
-		case 'n': table->makeMove(playerX, 7); break;
-		case 'm': table->makeMove(playerX, 8); break;
+		case 't': if(nearTable) table->makeMove(playerX, 0); break;
+		case 'y': if(nearTable) table->makeMove(playerX, 1); break;
+		case 'u': if(nearTable) table->makeMove(playerX, 2); break;
+		case 'g': if(nearTable) table->makeMove(playerX, 3); break;
+		case 'h': if(nearTable) table->makeMove(playerX, 4); break;
+		case 'j': if(nearTable) table->makeMove(playerX, 5); break;
+		case 'b': if(nearTable) table->makeMove(playerX, 6); break;
+		case 'n': if(nearTable) table->makeMove(playerX, 7); break;
+		case 'm': if(nearTable) table->makeMove(playerX, 8); break;
 	}       
 
 	checkCollisions();
@@ -204,13 +215,12 @@ void inputMouseCb(int x, int y){
 
 
 void display(){
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	//--- 3D
 	// Viewport
 	glViewport(0,0,XWINDOW,YWINDOW);
 	// Projecao
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	glViewport(0,0,XWINDOW, YWINDOW);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -223,7 +233,6 @@ void display(){
 				0, 1, 0);
 	draw();
 
-
 	if(nearTable){
 		//--- 2D
 		// Viewport
@@ -231,11 +240,11 @@ void display(){
 		// Projecao
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho( -1,1, -1,1, 2,0 );
+		glOrtho( -1,1, -1,1, -0.2,10 );
 		// Observador
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		gluLookAt(0,3,0, 0,0,0, 0,0,-1);
+		gluLookAt(0,table->height/2,0, 0,0,0, 0,0,-1);
 		draw();	
 	}
 
@@ -245,11 +254,12 @@ void display(){
 void draw(){
 	L0.update( 	float4(currPlayer->x, currPlayer->y, currPlayer->z, 1),
 				float3(-sin(currPlayer->angY), sin(currPlayer->angX), -cos(currPlayer->angY)) );
+	L1.enable();
 	L0.enable();
 		drawFence();
 		drawWalls();
 		drawSky();
-		// drawFloor();
+		drawFloor();
 		drawPlayers();
 		drawTable();
 
@@ -292,7 +302,7 @@ void drawWalls() {
 
 void drawTable() {
 	glPushMatrix();
-			table->drawTable();
+		table->drawTable();
 	glPopMatrix();
 }
 
