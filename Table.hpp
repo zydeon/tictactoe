@@ -17,13 +17,13 @@
 class Table {
 	public:
 		GLfloat width, height, depth, feetSize;
+		TTTGraphics *game;
 		
 		Table(GLfloat width_, GLfloat height_, GLfloat depth_,
 				GLfloat feetSize_);
 		void drawTable();
 		int makeMove(bool playerX, int pos);
 	private:
-		TTTGraphics *game;
 		GLuint texture;
 		RgbImage imag;
 		void drawFoot();

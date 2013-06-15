@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 #include "project.hpp"
 #include "resources.hpp"
 #include "Light.hpp"
@@ -57,6 +58,8 @@ int main(int argc, char **argv) {
 	glutInitWindowPosition (XWINDOW_POS, YWINDOW_POS); 
 	glutCreateWindow ("Tic Tac Toe");
 
+	srand (time(NULL));
+
 	XSCREEN = glutGet(GLUT_SCREEN_WIDTH);
 	YSCREEN = glutGet(GLUT_SCREEN_HEIGHT);
 	glClearColor(BLACK);
@@ -66,8 +69,15 @@ int main(int argc, char **argv) {
 	initLights();
 
 	glutDisplayFunc(display);
+	glutTimerFunc(25, update, 0);
 	
 	glutMainLoop();
+}
+
+void update(int v){
+	table->game->updatePieces();
+	glutPostRedisplay();
+	glutTimerFunc(25, update, 0);
 }
 
 void initObjects(){
@@ -97,16 +107,16 @@ void initLights(){
 
 	// Personal focus
 	L0 = Light( 		GL_LIGHT0,
-						color4( 0.2, 0.2, 0.2, 1.0 ), 	// ambient
-						color4( 0.8, 0.8, 0.8, 1.0 ),	// diffuse
+						color4( 0.0, 0.0, 0.2, 1.0 ), 	// ambient
+						color4( 0.0, 0.0, 0.8, 1.0 ),	// diffuse
 						color4( 1.0, 1.0, 0.0, 1.0 ),	// specular
 						float4( 0.0, 20.0, 0.0, 1.0 ),	// position 		(will be updated)
 						float3( 0.0, -1.0, 0.0 ),		// spot direction	(will be updated)
-						128,							// spot exponent
-						80.0f							// spot cutoff
+						0,							// spot exponent
+						10.0f							// spot cutoff
 					);	
 
-	// lamp
+	// Lamp
 	L1 = Light( 		GL_LIGHT1,
 						color4( 0.2, 0, 0, 1.0 ), 	// ambient
 						color4( 0.8, 0, 0, 1.0 ),	// diffuse
@@ -240,7 +250,7 @@ void display(){
 		// Projecao
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho( -1,1, -1,1, -0.2,10 );
+		glOrtho( -table->width/2,table->width/2, -table->width/2,table->width/2, -0.2,10 );
 		// Observador
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
@@ -263,7 +273,7 @@ void draw(){
 		drawPlayers();
 		drawTable();
 
-		drawAxis();
+		// drawAxis();
 	L0.disable();
 }
 

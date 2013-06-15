@@ -70,6 +70,7 @@ void drawPlayers();
 // Control functions
 void changePlayer();
 void checkCollisions();
+void update(int v);
 
 // Help functions
 GLfloat toDeg(GLfloat rad) ;
