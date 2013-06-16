@@ -1,15 +1,13 @@
 #include "Surface.hpp"
 
-Surface::Surface(GLfloat w_, GLfloat h_, string image, Material m, GLfloat d):
-					w(w_),
-					h(h_),
+Surface::Surface(string image, Material m, GLfloat d):
 					material(m),
 					dim(d)
 	{
 	loadTexture(image);
 }
 
-void Surface::drawSurface(GLint textureParam) {
+void Surface::draw(GLfloat w, GLfloat h, GLint textureParam) {
 	GLint i, j;
 	GLfloat W, H; // numero de quadrados unitarios de 'dim'	
 
@@ -29,6 +27,33 @@ void Surface::drawSurface(GLint textureParam) {
 			glTexCoord2f((j+1)/W, i/H); 	glVertex3f((j+1)*dim-w/2, i*dim-h/2, 0.0);
 			glTexCoord2f((j+1)/W, (i+1)/H); glVertex3f((j+1)*dim-w/2, (i+1)*dim-h/2, 0.0);
 			glTexCoord2f(j/W, (i+1)/H); 	glVertex3f(j*dim-w/2, (i+1)*dim-h/2, 0.0);
+		}
+	}
+	glEnd();
+
+	disableTexture();
+}
+
+void Surface::drawOutside(GLfloat w, GLfloat h, GLint textureParam){
+	GLint i, j;
+	GLfloat W, H; // numero de quadrados unitarios de 'dim'	
+
+	material.apply();
+	enableTexture(textureParam);
+
+	i = j = 0;
+	W = w / dim;
+	H = h / dim;
+
+	glBegin(GL_QUADS);
+	for( i = 0; i < H; ++i ){
+		for( j = 0; j < W; ++j ){
+			glNormal3f(0, 0, -1);
+			// face visivel sempre a da frente (considerar coordenadas da textura de 0 a 1)
+			glTexCoord2f(j/W, i/H); 		glVertex3f(j*dim-w/2, i*dim-h/2, 0.0);
+			glTexCoord2f(j/W, (i+1)/H); 	glVertex3f(j*dim-w/2, (i+1)*dim-h/2, 0.0);
+			glTexCoord2f((j+1)/W, (i+1)/H); glVertex3f((j+1)*dim-w/2, (i+1)*dim-h/2, 0.0);
+			glTexCoord2f((j+1)/W, i/H); 	glVertex3f((j+1)*dim-w/2, i*dim-h/2, 0.0);
 		}
 	}
 	glEnd();

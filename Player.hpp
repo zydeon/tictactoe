@@ -9,17 +9,20 @@
 	#include <GL\glut.h>
 #endif
 
+#include <string>
 #include "RgbImage.h"
+#include "Surface.hpp"
 
-#define SKIN_BMP "textures/skin.bmp"
-#define LEG_BMP "textures/leg.bmp"
 
-#define HEAD_BMP "textures/head.bmp"
+#define SKIN_BMP 	"textures/skin.bmp"
+#define LEG_BMP 	"textures/leg.bmp"
 
-#define TORSO0_BMP "textures/torso0.bmp"
-#define FACE0_BMP "textures/face0.bmp"
-#define TORSO1_BMP "textures/torso1.bmp"
-#define FACE1_BMP "textures/face1.bmp"
+#define HEAD_BMP 	"textures/head.bmp"
+
+#define TORSO0_BMP 	"textures/torso0.bmp"
+#define FACE0_BMP 	"textures/face0.bmp"
+#define TORSO1_BMP 	"textures/torso1.bmp"
+#define FACE1_BMP 	"textures/face1.bmp"
 
 #define HEAD_W 1.0
 #define HEAD_H 1.0
@@ -59,8 +62,7 @@ class Player {
 		// sensitivity of mouse (velocity of rotation)
 		static const GLfloat sensitivity = 0.001;
 
-
-		Player(GLfloat y_);
+		Player(GLfloat y_, char player = 0);
 
 		// get reference point (where is looking at)
 		GLfloat getRefX();
@@ -69,14 +71,15 @@ class Player {
 
 		void setZ(GLfloat z_);
 
-		void loadTextures(bool x);
-		
 		void drawPlayer();
 	private:
-		GLuint skinText,legText,torsoText,armText,neckText,headText,faceText;
-		RgbImage imag;
-		
-		void drawPipe(GLuint text, GLfloat w, GLfloat h, GLfloat z);
+		Surface *face;
+		Surface *head;
+		Surface *torso;
+		Surface *skin;
+		Surface *leg;
+
+		void drawPipe(Surface *surface, GLfloat w, GLfloat h, GLfloat z);
 		
 		void drawFoot();
 		void drawLeg();
@@ -86,5 +89,6 @@ class Player {
 		void drawHead();
 
 };
+
 
 #endif

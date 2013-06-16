@@ -16,6 +16,7 @@
 #include "Surface.hpp"
 #include "Light.hpp"
 #include "glm.h"
+#include "Player.hpp"
 
 using namespace std;
 
@@ -25,7 +26,7 @@ GLfloat projFar = 200;
 
 bool playerX = true;
 
-vector<Player> players(2, Player(FOOT_H+LEG_H+TORSO_H/2)); 
+Player *players[2];
 int currPlayerIndex;
 Player *currPlayer;
 
@@ -91,15 +92,15 @@ void initObjects(){
 	glEnable(GL_NORMALIZE);
 
 	table = new Table(TABLE_W,TABLE_H,TABLE_D);
-	ground = new Surface(XWORLD,ZWORLD, FLOOR_BMP, Material() );
+	ground = new Surface(FLOOR_BMP, Material() );
 	fence = new Fence(20, 15, 15);
 
 	// no light
-	sky = new Surface(XWORLD, ZWORLD, WALLS_TOP_BMP, Material() );
-	walls[0] = new Surface(XWORLD, YWORLD, WALLS_FRONT_BMP, Material() );
-	walls[1] = new Surface(XWORLD, YWORLD, WALLS_RIGHT_BMP, Material() );
-	walls[2] = new Surface(XWORLD, YWORLD, WALLS_BACK_BMP, Material() );
-	walls[3] = new Surface(XWORLD, YWORLD, WALLS_LEFT_BMP, Material() );
+	sky = new Surface(WALLS_TOP_BMP, Material() );
+	walls[0] = new Surface(WALLS_FRONT_BMP, Material() );
+	walls[1] = new Surface(WALLS_RIGHT_BMP, Material() );
+	walls[2] = new Surface(WALLS_BACK_BMP, Material() );
+	walls[3] = new Surface(WALLS_LEFT_BMP, Material() );
 
 	/*bunny = glmReadOBJ("models/fence.obj");
 	if (!bunny)  exit(0);
@@ -109,13 +110,14 @@ void initObjects(){
 	glmLinearTexture(bunny);
 	glmReadMTL(bunny, "fence.mtl");*/
 
-	players[0].loadTextures(true);
-	players[0].setZ(5.0);
-	players[1].loadTextures(false);
-	players[1].setZ(-5.0);
-	players[1].angY = PI;
+	players[0] = new Player(FOOT_H+LEG_H+TORSO_H/2, 0);
+	players[1] = new Player(FOOT_H+LEG_H+TORSO_H/2, 1);
+
+	players[0]->setZ(5.0);
+	players[1]->setZ(-5.0);
+	players[1]->angY = PI;
 	currPlayerIndex = 0;
-	currPlayer = &players[currPlayerIndex];	
+	currPlayer = players[currPlayerIndex];	
 }
 
 void initLights(){
@@ -229,7 +231,7 @@ void checkCollisions(){
 void changePlayer() {
 	playerX = !playerX;
 	currPlayerIndex = (currPlayerIndex + 1) % 2;
-	currPlayer = &players[currPlayerIndex];
+	currPlayer = players[currPlayerIndex];
 }
 
 void inputMouseCb(int x, int y){
@@ -286,7 +288,7 @@ void display(){
 		// Observador
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		gluLookAt(0,table->height/2,0, 0,0,0, 0,0,-1);
+		gluLookAt(0,table->height,0, 0,0,0, 0,0,-1);
 
 		enableLights();
 		drawGame();	
@@ -325,7 +327,7 @@ void drawSky() {
 	glPushMatrix();
 		glTranslatef(0.0,YWORLD, 0.0);
 		glRotatef(90 ,1 ,0 ,0 );
-		sky->drawSurface(GL_DECAL);
+		sky->draw(XWORLD, ZWORLD, GL_DECAL);
 	glPopMatrix();
 }
 
@@ -335,7 +337,7 @@ void drawWalls() {
 	glTranslatef(0, YWORLD/2, 0);
 	for( i = 0; i < 4; ++i ){
 		glTranslatef(0, 0, -ZWORLD/2);
-		walls[i]->drawSurface(GL_DECAL);
+		walls[i]->draw(XWORLD, YWORLD, GL_DECAL);
 		glTranslatef(0, 0, ZWORLD/2);
 		glRotatef(-90, 0, 1, 0);
 	}
@@ -352,7 +354,7 @@ void drawGame() {
 void drawFloor() {
 	glPushMatrix();
 		glRotatef(-90, 1, 0, 0);
-		ground->drawSurface();
+		ground->draw(XWORLD, ZWORLD);
 	glPopMatrix();
 }
 void drawAxis() {
@@ -375,14 +377,14 @@ void drawFence() {
 
 void drawPlayers() {
 	glPushMatrix();
-		glTranslatef(players[0].x, players[0].y, players[0].z);
-		glRotatef(toDeg(players[0].angY)+180 ,0,1,0);
-		players[0].drawPlayer();
+		glTranslatef(players[0]->x, players[0]->y, players[0]->z);
+		glRotatef(toDeg(players[0]->angY)+180 ,0,1,0);
+		players[0]->drawPlayer();
 	glPopMatrix();
 	glPushMatrix();
-		glTranslatef(players[1].x, players[1].y, players[1].z);
-		glRotatef(toDeg(players[1].angY)+180 ,0,1,0);
-		players[1].drawPlayer();
+		glTranslatef(players[1]->x, players[1]->y, players[1]->z);
+		glRotatef(toDeg(players[1]->angY)+180 ,0,1,0);
+		players[1]->drawPlayer();
 	glPopMatrix();
 }
 

@@ -29,8 +29,9 @@ using namespace std;
 
 class Surface {
 	public:
-		Surface(GLfloat w_, GLfloat h_, string image, Material m, GLfloat d=0.5f);  // with texture
-		void drawSurface(GLint textureParam = GL_MODULATE);
+		Surface(string image, Material m, GLfloat d=0.5f);  // with texture
+		void draw(GLfloat w, GLfloat h, GLint textureParam = GL_MODULATE);
+		void drawOutside(GLfloat w, GLfloat h, GLint textureParam = GL_MODULATE);
 	private:
 		GLfloat h, w;
 		GLuint texture;

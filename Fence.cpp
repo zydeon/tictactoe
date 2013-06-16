@@ -10,7 +10,7 @@
 
 Fence::Fence(GLint number, GLfloat w, GLfloat h) {
 	unitNumber = number;
-	unit = new Surface(unitW, unitH, FENCE_BMP, Material(), 0.05f);
+	unit = new Surface(FENCE_BMP, Material(), 0.05f);
 	width = w;
 	height = h;
 }
@@ -46,8 +46,16 @@ void Fence::drawSide(){
 }
 
 void Fence::drawUnit(){
-	// use stencil
+	// front
+	drawTexturedShape();
+	//back
+	glTranslatef(0, 0, -0.1);
+	drawTexturedShape();
+	glTranslatef(0, 0, 0.1);
+}
 
+void Fence::drawTexturedShape(){
+	// use stencil
 	glEnable(GL_STENCIL_TEST);
 	glClear(GL_STENCIL_BUFFER_BIT);
 	glColorMask(0, 0, 0, 0);
@@ -64,11 +72,10 @@ void Fence::drawUnit(){
 	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 	glStencilFunc(GL_EQUAL, 1, 1);	
 
-	unit->drawSurface();
+	unit->draw(unitW, unitH);
 
 	glDisable(GL_STENCIL_TEST);
 }
-
 void Fence::drawShape(){
 	glDisable(GL_LIGHTING);
 	glBegin(GL_POLYGON);

@@ -4,7 +4,7 @@ Table::Table(GLfloat width_, GLfloat height_, GLfloat depth_) {
 	width = width_;
 	height = height_;
 	depth = depth_;
-	feetSurface = new Surface(feetWidth, height, TABLE_BMP, Material(), 0.1f);
+	feetSurface = new Surface(TABLE_BMP, Material(), 0.1f);
 	game = new TTTGraphics(width_);
 }
 
@@ -30,7 +30,7 @@ void Table::drawFoot() {
 	glPushMatrix();
 	for( i = 0; i < 4; ++i ){
 		glTranslatef(0, 0, -1*feetWidth/2);
-		feetSurface->drawSurface();
+		feetSurface->draw(feetWidth, height);
 		glTranslatef(0, 0, feetWidth/2);
 		glRotatef(-90, 0, 1, 0);
 	}

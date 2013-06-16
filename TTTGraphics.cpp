@@ -3,7 +3,7 @@
 
 TTTGraphics::TTTGraphics(GLfloat size_) {
 	size = size_;
-	board = new Surface(size, size, GLASS_BMP, Material(
+	board = new Surface(GLASS_BMP, Material(
 														color4(1, 1, 1, 1),
 														color4(1, 1, 1, 0.5)
 		), 0.1f ) ;
@@ -25,7 +25,7 @@ void TTTGraphics::drawGame() {
 		
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 		glStencilFunc(GL_ALWAYS, 1, 1);
-		board->drawSurface();				// define area (pixels value = 1)
+		board->draw(size, size);				// define area (pixels value = 1)
 
 		glColorMask(1, 1, 1, 1);
 		glEnable(GL_DEPTH_TEST);
@@ -45,7 +45,7 @@ void TTTGraphics::drawGame() {
 		// desenhar superficie reflectora
 		glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			board->drawSurface();
+			board->draw(size, size);
 		glDisable(GL_BLEND);
 
 		glTranslatef(-size/2,-size/2,0);

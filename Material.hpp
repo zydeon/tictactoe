@@ -33,11 +33,11 @@ public:
 	{}
 
 	void apply() {
-        glMaterialfv( GL_FRONT, GL_AMBIENT, ambient.values );
-        glMaterialfv( GL_FRONT, GL_DIFFUSE, diffuse.values );
-        glMaterialfv( GL_FRONT, GL_SPECULAR, specular.values );
-        glMaterialfv( GL_FRONT, GL_EMISSION, emission.values );
-        glMaterialf( GL_FRONT, GL_SHININESS, shininess );
+        glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT, ambient.values );
+        glMaterialfv( GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse.values );
+        glMaterialfv( GL_FRONT_AND_BACK, GL_SPECULAR, specular.values );
+        glMaterialfv( GL_FRONT_AND_BACK, GL_EMISSION, emission.values );
+        glMaterialf( GL_FRONT_AND_BACK, GL_SHININESS, shininess );
     }	
 
 };

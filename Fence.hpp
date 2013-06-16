@@ -30,6 +30,7 @@ class Fence {
 		void drawUnit();
 		void drawShape();
 		void drawSide();
+		void drawTexturedShape();
 };
 
 
