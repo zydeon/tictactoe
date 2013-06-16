@@ -1,5 +1,4 @@
 #include "Player.hpp"
-#include "TicTacToeGL.hpp"
 #include <math.h>
 
 Player::Player(GLfloat y_){
@@ -12,6 +11,7 @@ Player::Player(GLfloat y_){
 }
 
 void Player::drawPlayer() {
+	glEnable(GL_TEXTURE_2D);
 	glPushMatrix();
 		drawTorso();
 		
@@ -50,6 +50,7 @@ void Player::drawPlayer() {
 			drawFoot();
 		glPopMatrix();
 	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
 }
 
 void Player::drawFoot() {
@@ -275,6 +276,9 @@ void Player::loadTextures(bool x) {
 		imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
 		imag.ImageData());
+
+	// deactivate textures
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Player::setZ(GLfloat z_) {
@@ -282,7 +286,7 @@ void Player::setZ(GLfloat z_) {
 }
 
 GLfloat Player::getRefX(){
-	return this->x + sin(angY) * 0.01f;
+	return this->x - sin(angY) * 0.01f;
 }
 GLfloat Player::getRefZ(){
 	return this->z - cos(angY) * 0.01f;

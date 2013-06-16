@@ -51,7 +51,7 @@ class Player {
 		GLfloat y;
 		GLfloat z;
 		
-		// rotation angles with X and Y axes (look up/down and right/left)
+		// rotation angles with X and Y axes in radians (look up/down and right/left)
 		GLfloat angX;
 		GLfloat angY;
 

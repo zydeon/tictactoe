@@ -1,48 +1,82 @@
+#ifdef __linux__
+	#include <GL/glut.h>
+#elif defined __APPLE__
+	#include <GLUT/glut.h>
+#else
+	#include <GL\glut.h>
+#endif
+
 #include "Fence.hpp"
 
-Fence::Fence(GLfloat w_, GLfloat h_, GLfloat d_) {
-	w = w_;
-	h = h_;
-	d = d_;
-	loadTexture();
+Fence::Fence(GLint number, GLfloat w, GLfloat h) {
+	unitNumber = number;
+	unit = new Surface(unitW, unitH, FENCE_BMP, Material(), 0.05f);
+	width = w;
+	height = h;
 }
 
-void Fence::drawFence() {
-	glBindTexture(GL_TEXTURE_2D,texture);
+void Fence::draw() {
+	int i;
+	glPushMatrix();
+		glTranslatef(-width/2, unitH/2, -height/2);
+		// front
+		drawSide();
+		glRotatef(-90,0,1,0);
+		//right
+		drawSide();
+		glRotatef(-90,0,1,0);
+		// back
+		drawSide();
+		glRotatef(-90,0,1,0);
+		// left
+		drawSide();
 
+	glPopMatrix();
+}
+
+void Fence::drawSide(){
+	GLint i;
+	// adjust corner
+	glTranslatef(unitW/2, 0, unitW/2);
+
+	for( i = 0; i < unitNumber; ++i ){
+		drawUnit();
+		glTranslatef(unitW, 0, 0);
+	}
+}
+
+void Fence::drawUnit(){
+	// use stencil
+
+	glEnable(GL_STENCIL_TEST);
+	glClear(GL_STENCIL_BUFFER_BIT);
+	glColorMask(0, 0, 0, 0);
+	glDisable(GL_DEPTH_TEST);
+
+	// definir molde
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+	glStencilFunc(GL_ALWAYS, 1, 1);
+	drawShape();
+
+	glColorMask(1, 1, 1, 1);
+	glEnable(GL_DEPTH_TEST);
+
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+	glStencilFunc(GL_EQUAL, 1, 1);	
+
+	unit->drawSurface();
+
+	glDisable(GL_STENCIL_TEST);
+}
+
+void Fence::drawShape(){
+	glDisable(GL_LIGHTING);
 	glBegin(GL_POLYGON);
-		glTexCoord2f(1.0f,0.0f); glVertex3f(w/2, -h/2, 0.0);
-		glTexCoord2f(1.0f,0.75f); glVertex3f(w/2, h/4, 0.0);
-		glTexCoord2f(0.5f,1.f); glVertex3f(0, h/2, 0.0);
-		glTexCoord2f(0.0f,0.75f); glVertex3f(-w/2, h/4, 0.0);
-		glTexCoord2f(0.0f,0.0f); glVertex3f(-w/2, -h/2, 0.0);
-		glTexCoord2f(1.0f,0.0f); glVertex3f(w/2, -h/2, 0.0);
-	glEnd();
-	
-}
-
-void Fence::drawSmallPiece(GLfloat size) {
-	glBindTexture(GL_TEXTURE_2D,texture);
-	glBegin(GL_POLYGON);
-		glTexCoord2f(1.0f,0.0f); glVertex3f(size/2, -h/2, 0.0);
-		glTexCoord2f(1.0f,0.75f); glVertex3f(size/2, h/4, 0.0);
-		glTexCoord2f(0.0f,0.75f); glVertex3f(-size/2, h/4, 0.0);
-		glTexCoord2f(0.0f,0.0f); glVertex3f(-size/2, -h/2, 0.0);
-		glTexCoord2f(1.0f,0.0f); glVertex3f(size/2, -h/2, 0.0);
-	glEnd();
-}
-
-void Fence::loadTexture() {
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	imag.LoadBmpFile(FENCE_BMP);
-	glTexImage2D(GL_TEXTURE_2D, 0, 3,
-		imag.GetNumCols(),
-		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
-		imag.ImageData());
+		glVertex3f(unitW/2, -1*unitH/2, 0);
+		glVertex3f(unitW/2, unitH/4, 0);
+		glVertex3f(0, unitH/2, 0);
+		glVertex3f(-1*unitW/2, unitH/4, 0);
+		glVertex3f(-1*unitW/2, -1*unitH/2, 0);
+	glEnd();	
+	glEnable(GL_LIGHTING);
 }
