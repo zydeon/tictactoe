@@ -110,8 +110,8 @@ void initObjects(){
 	glmLinearTexture(bunny);
 	glmReadMTL(bunny, "fence.mtl");*/
 
-	players[0] = new Player(FOOT_H+LEG_H+TORSO_H/2, 0);
-	players[1] = new Player(FOOT_H+LEG_H+TORSO_H/2, 1);
+	players[0] = new Player(FOOT_H+LEG_H+TORSO_H+NECK_W+HEAD_H/2, 0);
+	players[1] = new Player(FOOT_H+LEG_H+TORSO_H+NECK_W+HEAD_H/2, 1);
 
 	players[0]->setZ(5.0);
 	players[1]->setZ(-5.0);

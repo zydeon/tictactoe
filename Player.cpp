@@ -24,6 +24,8 @@ Player::Player(GLfloat y_, char player){
 }
 
 void Player::drawPlayer() {
+	// centrar posicao da camara com cabeca do jogador
+	glTranslatef(0, -(HEAD_H/2+NECK_H+TORSO_H/2), 0);
 	drawTorso();
 	
 	glPushMatrix();
@@ -60,6 +62,8 @@ void Player::drawPlayer() {
 		glTranslatef(0.0, -LEG_H/2-FOOT_H/2, -TORSO_D/2+FOOT_D/2);
 		drawFoot();
 	glPopMatrix();
+
+	glTranslatef(0, HEAD_H/2+NECK_H+TORSO_H/2, 0);
 }
 
 void Player::drawFoot() {
