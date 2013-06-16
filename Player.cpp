@@ -24,13 +24,14 @@ void Player::drawPlayer() {
 		
 		glPushMatrix();
 			glTranslatef(-TORSO_W/2-SHOULDER_W/2, TORSO_H/2-SHOULDER_H/2, 0.0);
+			glScalef(1.0, -1.0, 1.0);
 			drawArm();
 		glPopMatrix();
 		
 		
 		glPushMatrix();
 			glTranslatef(TORSO_W/2+SHOULDER_W/2, TORSO_H/2-SHOULDER_H/2, 0.0);
-			glScalef(-1.0, 1.0, 1.0);
+			glScalef(-1.0, -1.0, 1.0);
 			drawArm();
 		glPopMatrix();
 		
