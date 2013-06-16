@@ -37,6 +37,13 @@ void Table::drawFoot() {
 		glTranslatef(0, 0, feetWidth/2);
 		glRotatef(-90, 0, 1, 0);
 	}
+	glPushMatrix();
+		glTranslatef(0, height/2, 0);
+		glRotatef(-90, 1,0,0);
+		feetSurface->draw(feetWidth, feetWidth);
+	glPopMatrix();
+
+
 	glPopMatrix();
 }
 
