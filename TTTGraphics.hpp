@@ -13,9 +13,6 @@
 #include "RgbImage.h"
 #include "Surface.hpp"
 
-#define BLUE_BMP "textures/blue.bmp"
-#define RED_BMP "textures/red.bmp"
-
 class Piece{
 public:
 	static const GLfloat incY = 3.0;

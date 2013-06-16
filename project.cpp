@@ -90,7 +90,7 @@ void initObjects(){
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_NORMALIZE);
 
-	table = new Table(TABLE_W,TABLE_H,TABLE_D,TABLE_F);
+	table = new Table(TABLE_W,TABLE_H,TABLE_D);
 	ground = new Surface(XWORLD,ZWORLD, FLOOR_BMP, Material() );
 	fence = new Fence(20, 15, 15);
 
@@ -344,6 +344,7 @@ void drawWalls() {
 
 void drawGame() {
 	glPushMatrix();
+		glTranslatef(0, TABLE_H/2, 0);
 		table->drawTable();
 	glPopMatrix();
 }

@@ -25,6 +25,7 @@ using namespace std;
 #define WALLS_BACK_BMP 		"textures/night-sky/back.bmp"
 #define WALLS_TOP_BMP 		"textures/night-sky/top.bmp"
 #define WALL 				"textures/parede2.bmp"
+#define TABLE_BMP			"textures/table.bmp"
 
 class Surface {
 	public:

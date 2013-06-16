@@ -33,9 +33,8 @@
 #define PLAYER_H 4.0
 
 #define TABLE_W 1.5
-#define TABLE_H 3.0
+#define TABLE_H 1.5
 #define TABLE_D 1.5
-#define TABLE_F 0.15
 
 #define TIMER_MSEC 25
 
