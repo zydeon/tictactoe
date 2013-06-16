@@ -24,9 +24,9 @@
 #define XWINDOW_POS 50
 #define YWINDOW_POS 50
 
-#define XWORLD 75
-#define YWORLD 40
-#define ZWORLD 75
+#define XWORLD 50
+#define YWORLD 26
+#define ZWORLD 50
 
 #define SQUARESIZE 20.0
 
@@ -54,6 +54,7 @@ void display();
 void initControls();
 void initObjects();
 void initLights();
+void initFog();
 
 // Drawing functions
 void draw();

@@ -6,7 +6,7 @@ TTTGraphics::TTTGraphics(GLfloat size_) {
 	board = new Surface(size, size, GLASS_BMP, Material(
 														color4(1, 1, 1, 1),
 														color4(1, 1, 1, 0.5)
-		) ) ;
+		), 0.1f ) ;
 	ttt = new TicTacToe();
 }
 

@@ -13,6 +13,7 @@
 #include <time.h>
 #include "project.hpp"
 #include "resources.hpp"
+#include "Surface.hpp"
 #include "Light.hpp"
 #include "glm.h"
 
@@ -33,7 +34,7 @@ int mouseY;
 
 Table *table;
 Surface *sky;
-Surface *wall;
+Surface *walls[4];
 Surface *ground;
 Fence *fence;
 
@@ -70,6 +71,7 @@ int main(int argc, char **argv) {
 	initControls();
 	initObjects();
 	initLights();
+	initFog();
 
 	glutDisplayFunc(display);
 	glutTimerFunc(TIMER_MSEC, update, 0);
@@ -89,10 +91,15 @@ void initObjects(){
 	glEnable(GL_NORMALIZE);
 
 	table = new Table(TABLE_W,TABLE_H,TABLE_D,TABLE_F);
-	sky = new Surface(XWORLD, ZWORLD, SKY_BMP, Material() );
-	wall = new Surface(YWORLD, XWORLD, WALLS_BMP, Material() );
 	ground = new Surface(XWORLD,ZWORLD, FLOOR_BMP, Material() );
 	fence = new Fence(20, 15, 15);
+
+	// no light
+	sky = new Surface(XWORLD, ZWORLD, WALLS_TOP_BMP, Material() );
+	walls[0] = new Surface(XWORLD, YWORLD, WALLS_FRONT_BMP, Material() );
+	walls[1] = new Surface(XWORLD, YWORLD, WALLS_RIGHT_BMP, Material() );
+	walls[2] = new Surface(XWORLD, YWORLD, WALLS_BACK_BMP, Material() );
+	walls[3] = new Surface(XWORLD, YWORLD, WALLS_LEFT_BMP, Material() );
 
 	/*bunny = glmReadOBJ("models/fence.obj");
 	if (!bunny)  exit(0);
@@ -114,7 +121,7 @@ void initObjects(){
 void initLights(){
 	glEnable(GL_LIGHTING);
 	// Global ambient model
-	color4 globalAmbientColor = color4(0.7f, 0.7f, 0.7f, 1.0f);
+	color4 globalAmbientColor = color4(0.3, 0.3, 0.3, 1.0f);
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbientColor.values );
 
 	// Personal focus
@@ -139,6 +146,17 @@ void initLights(){
 						10.0f							// spot cutoff
 					);
 
+}
+
+void initFog(){
+	glEnable(GL_FOG);
+	color4 fogColor = color4(0.60, 0.60, 0.60, 1);
+
+	glFogfv(GL_FOG_COLOR, fogColor.values); 				//Cor do nevoeiro
+	glFogi(GL_FOG_MODE, GL_LINEAR); 				//Equa‹o do nevoeiro - linear
+	glFogf(GL_FOG_START, 1.0); 				// Dist‰ncia a que ter‡ in’cio o nevoeiro
+	glFogf(GL_FOG_END, 40.0); 				// Dist‰ncia a que o nevoeiro terminar‡
+	glFogf (GL_FOG_DENSITY, 0.35); 				//Densidade do nevoeiro - n‹o se especifica quando temos "nevoeiro linear"	
 }
 
 void initControls(){
@@ -307,32 +325,20 @@ void drawSky() {
 	glPushMatrix();
 		glTranslatef(0.0,YWORLD, 0.0);
 		glRotatef(90 ,1 ,0 ,0 );
-		sky->drawSurface();
+		sky->drawSurface(GL_DECAL);
 	glPopMatrix();
 }
 
 void drawWalls() {
+	int i;
 	glPushMatrix();
-		glTranslatef(0, YWORLD/2, -ZWORLD/2);
-		wall->drawSurface();
-	glPopMatrix();
-	
-	glPushMatrix();
-		glTranslatef(-XWORLD/2, YWORLD/2, 0 );
-		glRotatef(90 ,0 ,1 ,0 );
-		wall->drawSurface();
-	glPopMatrix();
-	
-	glPushMatrix();
-		glTranslatef(XWORLD/2, YWORLD/2, 0 );
-		glRotatef(-90 ,0 ,1 ,0 );
-		wall->drawSurface();
-	glPopMatrix();
-	
-	glPushMatrix();
-		glTranslatef(0 , YWORLD/2, ZWORLD/2);
-		glRotatef(180 ,0 ,1 ,0 );
-		wall->drawSurface();
+	glTranslatef(0, YWORLD/2, 0);
+	for( i = 0; i < 4; ++i ){
+		glTranslatef(0, 0, -ZWORLD/2);
+		walls[i]->drawSurface(GL_DECAL);
+		glTranslatef(0, 0, ZWORLD/2);
+		glRotatef(-90, 0, 1, 0);
+	}
 	glPopMatrix();
 }
 

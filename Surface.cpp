@@ -9,12 +9,12 @@ Surface::Surface(GLfloat w_, GLfloat h_, string image, Material m, GLfloat d):
 	loadTexture(image);
 }
 
-void Surface::drawSurface() {
+void Surface::drawSurface(GLint textureParam) {
 	GLint i, j;
 	GLfloat W, H; // numero de quadrados unitarios de 'dim'	
 
 	material.apply();
-	enableTexture();
+	enableTexture(textureParam);
 
 	i = j = 0;
 	W = w / dim;
@@ -36,11 +36,11 @@ void Surface::drawSurface() {
 	disableTexture();
 }
 
-void Surface::enableTexture(){
+void Surface::enableTexture(GLint param){
 	glEnable(GL_TEXTURE_2D);
 
 	glBindTexture(GL_TEXTURE_2D,texture);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);  
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, param);  
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
