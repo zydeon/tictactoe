@@ -327,10 +327,12 @@ void drawPlayers() {
 	glPushMatrix();
 		glPushMatrix();
 			glTranslatef(players[0].getRefX(), players[0].getRefY(), players[0].getRefZ());
+			glRotatef(players[0].angY, 0.0, 1.0, 0.0);
 			players[0].drawPlayer();
 		glPopMatrix();
 		glPushMatrix();
 			glTranslatef(players[1].getRefX(), players[1].getRefY(), players[1].getRefZ());
+			glRotatef(players[1].angY, 0.0, 1.0, 0.0);
 			players[1].drawPlayer();
 		glPopMatrix();
 	glPopMatrix();
