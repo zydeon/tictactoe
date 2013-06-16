@@ -49,6 +49,7 @@ void Fence::drawUnit(){
 	// use stencil
 
 	glEnable(GL_STENCIL_TEST);
+	glClear(GL_STENCIL_BUFFER_BIT);
 	glColorMask(0, 0, 0, 0);
 	glDisable(GL_DEPTH_TEST);
 
