@@ -35,7 +35,7 @@ Table *table;
 Surface *sky;
 Surface *wall;
 Surface *ground;
-Fence *f;
+Fence *fence;
 
 Light L0, L1;
 
@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
 	initLights();
 
 	glutDisplayFunc(display);
-	glutTimerFunc(25, update, 0);
+	glutTimerFunc(TIMER_MSEC, update, 0);
 	
 	glutMainLoop();
 }
@@ -80,7 +80,7 @@ int main(int argc, char **argv) {
 void update(int v){
 	table->game->updatePieces();
 	glutPostRedisplay();
-	glutTimerFunc(25, update, 0);
+	glutTimerFunc(TIMER_MSEC, update, 0);
 }
 
 void initObjects(){
@@ -92,7 +92,7 @@ void initObjects(){
 	sky = new Surface(XWORLD, ZWORLD, SKY_BMP, Material() );
 	wall = new Surface(YWORLD, XWORLD, WALLS_BMP, Material() );
 	ground = new Surface(XWORLD,ZWORLD, FLOOR_BMP, Material() );
-	f = new Fence(FENCE_W, FENCE_H, FENCE_D);
+	fence = new Fence(20, 15, 15);
 
 	/*bunny = glmReadOBJ("models/fence.obj");
 	if (!bunny)  exit(0);
@@ -106,6 +106,7 @@ void initObjects(){
 	players[0].setZ(5.0);
 	players[1].loadTextures(false);
 	players[1].setZ(-5.0);
+	players[1].angY = PI;
 	currPlayerIndex = 0;
 	currPlayer = &players[currPlayerIndex];	
 }
@@ -252,6 +253,8 @@ void display(){
 	gluLookAt(	currPlayer->x, currPlayer->y, currPlayer->z,
 				currPlayer->getRefX(), currPlayer->getRefY(), currPlayer->getRefZ(),
 				0, 1, 0);
+
+	enableLights();
 	draw();
 
 	if(nearTable){
@@ -266,36 +269,39 @@ void display(){
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		gluLookAt(0,table->height/2,0, 0,0,0, 0,0,-1);
-		draw();	
+
+		enableLights();
+		drawGame();	
 	}
 
 	glutSwapBuffers();
 }
 
-void draw(){
+void enableLights(){
 	L0.update( 	float4(currPlayer->x, currPlayer->y, currPlayer->z, 1),
 				float3(-sin(currPlayer->angY), sin(currPlayer->angX), -cos(currPlayer->angY)) );
 	L1.enable();
 	L0.enable();
-
-		glEnable(GL_COLOR_MATERIAL);
-		glTranslatef(0,4,0);
-		glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
-		glColor3f(0.2,0.2,0.2);
-		glmDraw(bunny, GLM_SMOOTH  );
-		glTranslatef(0,-4,0);
-		glDisable(GL_COLOR_MATERIAL);
-
-		drawFence();
-		drawWalls();
-		drawSky();
-		drawFloor();
-		drawPlayers();
-		drawTable();
-
-		// drawAxis();
-	L0.disable();
 }
+
+void draw(){
+	/*glEnable(GL_COLOR_MATERIAL);
+	glTranslatef(0,4,0);
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
+	glColor3f(0.2,0.2,0.2);
+	glmDraw(bunny, GLM_SMOOTH  );
+	glTranslatef(0,-4,0);
+	glDisable(GL_COLOR_MATERIAL);*/
+
+	drawFence();
+	drawWalls();
+	drawSky();
+	drawFloor();
+	drawPlayers();
+	drawGame();
+	// drawAxis();
+}
+
 
 void drawSky() {
 	glPushMatrix();
@@ -330,7 +336,7 @@ void drawWalls() {
 	glPopMatrix();
 }
 
-void drawTable() {
+void drawGame() {
 	glPushMatrix();
 		table->drawTable();
 	glPopMatrix();
@@ -357,83 +363,7 @@ void drawAxis() {
 }
 
 void drawFence() {
-	int numberOfFences = SQUARESIZE/FENCE_W;
-	
-	//FIX THIS
-	double difference = SQUARESIZE-numberOfFences*FENCE_W;
-	
-	bool corner = difference > 0.1;
-	
-	int i;
-	
-	glPushMatrix();
-	
-	glTranslatef(0.0,FENCE_H/2, 0.0);
-
-	for(i = 0; i < numberOfFences; i++) {
-		glPushMatrix();
-			glTranslatef(-SQUARESIZE/2+i*FENCE_W, 0.0, -SQUARESIZE/2);
-			f->drawFence();
-		glPopMatrix();
-	}
-	if(corner) {
-		glPushMatrix();
-			glTranslatef(-SQUARESIZE/2+numberOfFences*FENCE_W-difference/4, 0.0, -SQUARESIZE/2);
-			f->drawSmallPiece(difference);
-			glColor3f(1.0,1.0,1.0);
-			glBegin(GL_LINES);
-			glVertex3f(0.0,0.0,0.0);
-			glVertex3f(difference,0.0,0.0);
-			glEnd();
-		glPopMatrix();
-	}
-	
-	for(i = 0; i < numberOfFences; i++) {
-		glPushMatrix();
-			glTranslatef(SQUARESIZE/2-FENCE_W/2, 0.0, i*FENCE_W-SQUARESIZE/2);
-			glRotatef(90.0, 0, 1 , 0);
-			f->drawFence();
-		glPopMatrix();
-	}
-	if(corner) {
-		glPushMatrix();
-			glTranslatef(SQUARESIZE/2, 0.0, numberOfFences*FENCE_W-difference/4-SQUARESIZE/2);
-			glRotatef(90.0, 0, 1 , 0);
-			f->drawSmallPiece(difference);
-		glPopMatrix();
-	}
-	
-	for(i = 0; i < numberOfFences; i++) {
-		glPushMatrix();
-			glTranslatef(-SQUARESIZE/2, 0.0, i*FENCE_W-SQUARESIZE/2);
-			glRotatef(-90.0, 0, 1 , 0);
-			f->drawFence();
-		glPopMatrix();
-	}
-	if(corner) {
-		glPushMatrix();
-			glTranslatef(-SQUARESIZE/2, 0.0, numberOfFences*FENCE_W-difference/4-SQUARESIZE/2);
-			glRotatef(-90.0, 0, 1 , 0);
-			f->drawSmallPiece(difference);
-		glPopMatrix();
-	}
-	
-	for(i = 0; i < numberOfFences; i++) {
-		glPushMatrix();
-			glTranslatef(i*FENCE_W-SQUARESIZE/2, 0.0, SQUARESIZE/2);
-			glRotatef(180, 0, 1 , 0);
-			f->drawFence();
-		glPopMatrix();
-	}
-	if(corner) {
-		glPushMatrix();
-			glTranslatef(numberOfFences*FENCE_W-difference/4-SQUARESIZE/2, 0.0, SQUARESIZE/2);
-			glRotatef(180, 0, 1 , 0);
-			f->drawSmallPiece(difference);
-		glPopMatrix();
-	}
-	
-	glPopMatrix();
+	fence->draw();
 }
 
 void drawPlayers() {

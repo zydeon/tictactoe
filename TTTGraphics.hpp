@@ -28,9 +28,14 @@ public:
 		angX = rand() % 360;
 	}
 
-	void draw(color4 color){
-		glEnable(GL_COLOR_MATERIAL);
+	void draw(color4 color, char lightsOn){
+		if(lightsOn){
+			glEnable(GL_COLOR_MATERIAL);
 			glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
+		}
+		else{
+			glDisable(GL_LIGHTING);
+		}
 			glPushMatrix();
 				glColor4f(color.values[0],color.values[1],color.values[2],color.values[3]);
 				glRotatef(angY, 0, 1, 0);
@@ -39,7 +44,11 @@ public:
 				glColor3f(0,0,0);
 				glutWireCube(0.23);
 			glPopMatrix();
-		glDisable(GL_COLOR_MATERIAL);
+
+		if(lightsOn)
+			glDisable(GL_COLOR_MATERIAL);
+		else
+			glEnable(GL_LIGHTING);
 	}
 
 	void update(){
@@ -64,7 +73,7 @@ class TTTGraphics {
 		GLuint texture[2];
 		RgbImage imag;
 		void drawLines();
-		void drawPieces();
+		void drawPieces(char lightsOn);
 };
 
 

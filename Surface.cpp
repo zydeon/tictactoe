@@ -1,9 +1,10 @@
 #include "Surface.hpp"
 
-Surface::Surface(GLfloat w_, GLfloat h_, string image, Material m):
+Surface::Surface(GLfloat w_, GLfloat h_, string image, Material m, GLfloat d):
 					w(w_),
 					h(h_),
-					material(m)
+					material(m),
+					dim(d)
 	{
 	loadTexture(image);
 }

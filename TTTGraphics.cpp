@@ -15,7 +15,7 @@ void TTTGraphics::drawGame() {
 
 		glPushMatrix();
 			glTranslatef(0, 0, -0.4);
-			drawPieces();
+			drawPieces(1);
 		glPopMatrix();
 
 		// Reflection
@@ -37,7 +37,7 @@ void TTTGraphics::drawGame() {
 		glPushMatrix();
 			glScalef(1, 1, -1);
 			glTranslatef(0, 0, -0.4);
-			drawPieces();
+			drawPieces(0);
 		glPopMatrix();
 
 		glDisable(GL_STENCIL_TEST);
@@ -54,7 +54,8 @@ void TTTGraphics::drawGame() {
 }
 
 void TTTGraphics::drawLines() {
-	glColor3f(1.0,1.0,0.0);
+	glDisable(GL_LIGHTING);
+	glColor3f(1.0,1.0,1.0);
 	glBegin(GL_LINES);	
 		glVertex3f(0.0, size/3, -0.01);
 		glVertex3f(size, size/3, -0.01);
@@ -68,9 +69,10 @@ void TTTGraphics::drawLines() {
 		glVertex3f(2*size/3, 0.0, -0.01);
 		glVertex3f(2*size/3, size, -0.01);
 	glEnd();
+	glEnable(GL_LIGHTING);
 }
 
-void TTTGraphics::drawPieces() {
+void TTTGraphics::drawPieces(char lightsOn) {
 	int i,j, index;
 	int *positions;
 	GLfloat inc = size/3;
@@ -81,9 +83,9 @@ void TTTGraphics::drawPieces() {
 			index = i*3+j;
 			if(positions[index] != NO_MOVE) {
 				glPushMatrix();
-					glTranslatef(j*inc, i*inc, 0.0);
+					glTranslatef((j-1)*inc, (i-1)*inc, 0.0);
 					color4 color = positions[index] == X_MOVE ? color4(1,0,0,1) : color4(0,0,1,1);
-					pieces[index].draw(color);
+					pieces[index].draw(color, lightsOn);
 				glPopMatrix();
 			}
 		}

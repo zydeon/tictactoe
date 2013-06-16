@@ -36,7 +36,7 @@ void Table::drawTable() {
 		glTranslatef(0,height/2,0);
 		// drawTop();
 		glPushMatrix();
-			glTranslatef(0.0,0.11,0.0);
+			// glTranslatef(0.0,0.11,0.0);
 			glRotatef(90, 1, 0, 0);
 			game->drawGame();
 		glPopMatrix();

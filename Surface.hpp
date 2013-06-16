@@ -23,14 +23,14 @@ using namespace std;
 
 class Surface {
 	public:
-		Surface(GLfloat w_, GLfloat h_, string image, Material m);  // with texture
+		Surface(GLfloat w_, GLfloat h_, string image, Material m, GLfloat d=0.5f);  // with texture
 		void drawSurface();
 	private:
 		GLfloat h, w;
 		GLuint texture;
 		Material material;
 		// superficie dividida em quadrados de dimensao 'dim'
-		const static GLfloat dim = 0.5f;
+		GLfloat dim;
 
 		void loadTexture(string im_path);
 		void disableTexture();

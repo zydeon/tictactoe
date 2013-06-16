@@ -32,14 +32,12 @@
 
 #define PLAYER_H 4.0
 
-#define FENCE_W 0.75
-#define FENCE_H 2.5
-#define FENCE_D 0.5
-
 #define TABLE_W 1.5
 #define TABLE_H 3.0
 #define TABLE_D 1.5
 #define TABLE_F 0.15
+
+#define TIMER_MSEC 25
 
 #define PI    3.14159265359
 
@@ -64,13 +62,14 @@ void drawFence();
 void drawFloor();
 void drawWalls();
 void drawSky();
-void drawTable();
+void drawGame();
 void drawPlayers();
 
 // Control functions
 void changePlayer();
 void checkCollisions();
 void update(int v);
+void enableLights();
 
 // Help functions
 GLfloat toDeg(GLfloat rad) ;
