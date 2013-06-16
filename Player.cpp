@@ -96,7 +96,7 @@ void Player::drawHead() {
 	// Front
 	glPushMatrix();
 		glTranslatef(0, 0, HEAD_D/2);
-		face->drawOutside(HEAD_W, HEAD_H);
+		face->draw(HEAD_W, HEAD_H);
 	glPopMatrix();
 	// Back
 	glPushMatrix();

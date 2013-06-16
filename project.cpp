@@ -216,6 +216,8 @@ void inputKeyboardCb(unsigned char key, int x, int y){
 		case 'b': if(nearTable) table->makeMove(playerX, 6); break;
 		case 'n': if(nearTable) table->makeMove(playerX, 7); break;
 		case 'm': if(nearTable) table->makeMove(playerX, 8); break;
+
+		default: return;
 	}
 
 	checkCollisions();
