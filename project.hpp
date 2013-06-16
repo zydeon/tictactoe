@@ -40,10 +40,6 @@
 
 #define PI    3.14159265359
 
-// pixels resolution of screen (dynamic)
-int XSCREEN;
-int YSCREEN;
-
 // Callback functions
 void inputMouseCb(int x, int y);
 void inputKeyboardCb(unsigned char key, int x, int y);
@@ -70,6 +66,7 @@ void changePlayer();
 void checkCollisions();
 void update(int v);
 void enableLights();
+void checkCollisionObject(GLfloat x, GLfloat y, GLfloat w, GLfloat d);
 
 // Help functions
 GLfloat toDeg(GLfloat rad) ;

@@ -20,6 +20,10 @@
 
 using namespace std;
 
+// pixels resolution of screen (dynamic)
+int XSCREEN;
+int YSCREEN;
+
 GLfloat projAngle = 100;
 GLfloat projNear = 1;
 GLfloat projFar = 200;
@@ -43,7 +47,12 @@ Light L0, L1;
 
 char nearTable;
 
-GLMmodel *bunny;
+// GLMmodel *bunny;
+
+// collisions
+GLfloat collisionDist = 0.7f;
+GLfloat newPositionX;
+GLfloat newPositionZ;
 
 /*
  * T | Y | U
@@ -91,7 +100,7 @@ void initObjects(){
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_NORMALIZE);
 
-	table = new Table(TABLE_W,TABLE_H,TABLE_D);
+	table = new Table(0, 0, 0, TABLE_W,TABLE_H,TABLE_D);
 	ground = new Surface(FLOOR_BMP, Material() );
 	fence = new Fence(20, 15, 15);
 
@@ -154,11 +163,11 @@ void initFog(){
 	glEnable(GL_FOG);
 	color4 fogColor = color4(0.60, 0.60, 0.60, 1);
 
-	glFogfv(GL_FOG_COLOR, fogColor.values); 				//Cor do nevoeiro
-	glFogi(GL_FOG_MODE, GL_LINEAR); 				//Equa‹o do nevoeiro - linear
-	glFogf(GL_FOG_START, 1.0); 				// Dist‰ncia a que ter‡ in’cio o nevoeiro
-	glFogf(GL_FOG_END, 40.0); 				// Dist‰ncia a que o nevoeiro terminar‡
-	glFogf (GL_FOG_DENSITY, 0.35); 				//Densidade do nevoeiro - n‹o se especifica quando temos "nevoeiro linear"	
+	glFogfv(GL_FOG_COLOR, fogColor.values);
+	glFogi(GL_FOG_MODE, GL_LINEAR);
+	glFogf(GL_FOG_START, 1.0);
+	glFogf(GL_FOG_END, 40.0);
+	// glFogf(GL_FOG_DENSITY, 0.35);
 }
 
 void initControls(){
@@ -176,24 +185,24 @@ void initControls(){
 void inputKeyboardCb(unsigned char key, int x, int y){
 	switch (key) {
 		case 27:
-				exit(0);
+			exit(0);
 		break;
 		
 		case 'w':
-				currPlayer->x -= Player::velocity * sin(currPlayer->angY);
-				currPlayer->z -= Player::velocity * cos(currPlayer->angY);
+			newPositionX = currPlayer->x - Player::velocity * sin(currPlayer->angY);
+			newPositionZ = currPlayer->z - Player::velocity * cos(currPlayer->angY);
 		break;
 		case 's':
-				currPlayer->x += Player::velocity * sin(currPlayer->angY);
-				currPlayer->z += Player::velocity * cos(currPlayer->angY);
+			newPositionX = currPlayer->x + Player::velocity * sin(currPlayer->angY);
+			newPositionZ = currPlayer->z + Player::velocity * cos(currPlayer->angY);
 		break;
 		case 'a':
-				currPlayer->x += Player::velocity * sin(currPlayer->angY-PI/2);
-				currPlayer->z += Player::velocity * cos(currPlayer->angY-PI/2);
+			newPositionX = currPlayer->x + Player::velocity * sin(currPlayer->angY-PI/2);
+			newPositionZ = currPlayer->z + Player::velocity * cos(currPlayer->angY-PI/2);
 		break;
 		case 'd':
-				currPlayer->x += Player::velocity * sin(currPlayer->angY+PI/2);
-				currPlayer->z += Player::velocity * cos(currPlayer->angY+PI/2);
+			newPositionX = currPlayer->x + Player::velocity * sin(currPlayer->angY+PI/2);
+			newPositionZ = currPlayer->z + Player::velocity * cos(currPlayer->angY+PI/2);
 		break;
 		
 		case 'x': changePlayer(); break;
@@ -221,11 +230,47 @@ double distance_(float3 p1, float3 p2){
 
 void checkCollisions(){
 	float3 currPosition = float3(currPlayer->x, currPlayer->y, currPlayer->z);
+	float3 currPosition2 = float3(players[!currPlayerIndex]->x, players[!currPlayerIndex]->y, players[!currPlayerIndex]->z);
 
 	// se estiver perto da mesa
-	nearTable = distance_(currPosition, float3(0,0,0)) < 5;
+	if(distance_(currPosition, float3(table->x,table->y,table->z) ) < 6 ){
+		nearTable = 1;
 
-	// TODO RESTO DAS COLISOES
+		// reset position
+		checkCollisionObject(table->x, table->z, TABLE_W, TABLE_D);
+	}
+	else{
+		nearTable = 0;
+	}
+
+	// other player
+	checkCollisionObject(players[!currPlayerIndex]->x, players[!currPlayerIndex]->z, TORSO_W +1+ collisionDist, HEAD_D + collisionDist);
+
+	// fence
+	if( newPositionX > 0 + fence->width/2 - collisionDist ) newPositionX = 0 + fence->width/2 - collisionDist;
+	if( newPositionX < 0 - fence->width/2 + collisionDist ) newPositionX = 0 - fence->width/2 + collisionDist ;
+	if( newPositionZ > 0 + fence->height/2 - collisionDist ) newPositionZ = 0 + fence->height/2 - collisionDist;
+	if( newPositionZ < 0 - fence->height/2 + collisionDist ) newPositionZ = 0 - fence->height/2 + collisionDist;
+
+	currPlayer->x = newPositionX;
+	currPlayer->z = newPositionZ;
+}
+
+void checkCollisionObject(GLfloat x, GLfloat z, GLfloat w, GLfloat d){
+	if( newPositionZ > z -d/2 && newPositionZ < z + d/2 ){
+		if( newPositionX > x - w/2 - collisionDist && currPlayer->x <= x - w/2 )
+			newPositionX = x - w/2 - collisionDist;
+		if( newPositionX < x + w/2 + collisionDist && currPlayer->x >= x + w/2){
+			newPositionX = x + w/2 + collisionDist;
+		}
+	}
+	if( newPositionX > x -w/2 && newPositionX < x + w/2 ){
+		if( newPositionZ > z - d/2 - collisionDist && currPlayer->z <= z - d/2 )
+			newPositionZ = z - d/2 - collisionDist;
+		if( newPositionZ < z + d/2 + collisionDist && currPlayer->z >= z + d/2){
+			newPositionZ = z + d/2 + collisionDist;
+		}
+	}
 }
 
 void changePlayer() {

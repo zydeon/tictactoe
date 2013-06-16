@@ -6,13 +6,18 @@
 	#include <GL\glut.h>
 #endif
 
+#include <math.h>
 #include "Fence.hpp"
+#include "project.hpp"
 
 Fence::Fence(GLint number, GLfloat w, GLfloat h) {
 	unitNumber = number;
 	unit = new Surface(FENCE_BMP, Material(), 0.05f);
 	width = w;
 	height = h;
+
+	unitCornerH = sqrt((unitH/4)*(unitH/4)+(unitW/2)*(unitW/2));
+	unitCornerAng = toDeg( atan( (unitW/2)/(unitH/4)) );
 }
 
 void Fence::draw() {
@@ -47,14 +52,29 @@ void Fence::drawSide(){
 
 void Fence::drawUnit(){
 	// front
-	drawTexturedShape();
+	drawTexturedShape(0);
 	//back
-	glTranslatef(0, 0, -0.1);
-	drawTexturedShape();
-	glTranslatef(0, 0, 0.1);
+	glTranslatef(0, 0, -1*unitD/2);
+	drawTexturedShape(1);
+	glTranslatef(0, 0, unitD/2);
+
+	// Top left
+	glPushMatrix();
+		glTranslatef(-1*unitW/4, unitH/4+unitH/8, -1*unitD/2);
+		glRotatef(-90, 0,1,0);
+		glRotatef(-unitCornerAng , 1,0,0);
+		unit->draw(unitD, unitCornerH );
+	glPopMatrix();
+	// Top right
+	glPushMatrix();
+		glTranslatef(unitW/4, unitH/4+unitH/8, -1*unitD/2);
+		glRotatef(90, 0,1,0);
+		glRotatef(-unitCornerAng, 1,0,0);
+		unit->draw(unitD, unitCornerH );
+	glPopMatrix();	
 }
 
-void Fence::drawTexturedShape(){
+void Fence::drawTexturedShape(char outside){
 	// use stencil
 	glEnable(GL_STENCIL_TEST);
 	glClear(GL_STENCIL_BUFFER_BIT);
@@ -72,7 +92,8 @@ void Fence::drawTexturedShape(){
 	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 	glStencilFunc(GL_EQUAL, 1, 1);	
 
-	unit->draw(unitW, unitH);
+	if(outside)	unit->drawOutside(unitW, unitH);
+	else		unit->draw(unitW, unitH);
 
 	glDisable(GL_STENCIL_TEST);
 }

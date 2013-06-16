@@ -1,6 +1,9 @@
 #include "Table.hpp"
 
-Table::Table(GLfloat width_, GLfloat height_, GLfloat depth_) {
+Table::Table(GLfloat x_, GLfloat y_, GLfloat z_, GLfloat width_, GLfloat height_, GLfloat depth_) {
+	x = x_;
+	y = y_;
+	z = z_;
 	width = width_;
 	height = height_;
 	depth = depth_;

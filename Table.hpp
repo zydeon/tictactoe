@@ -16,10 +16,11 @@
 
 class Table {
 	public:
+		GLfloat x, y, z;
 		GLfloat width, height, depth;
 		TTTGraphics *game;
 		
-		Table(GLfloat width_, GLfloat height_, GLfloat depth_);
+		Table(GLfloat x_, GLfloat y_, GLfloat z_, GLfloat width_, GLfloat height_, GLfloat depth_);
 		void drawTable();
 		int makeMove(bool playerX, int pos);
 	private:
