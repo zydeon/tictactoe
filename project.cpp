@@ -205,7 +205,7 @@ void inputKeyboardCb(unsigned char key, int x, int y){
 			newPositionZ = currPlayer->z + Player::velocity * cos(currPlayer->angY+PI/2);
 		break;
 		
-		case 'x': changePlayer(); break;
+		case 'x': changePlayer(); return; break;
 		
 		case 't': if(nearTable) table->makeMove(playerX, 0); break;
 		case 'y': if(nearTable) table->makeMove(playerX, 1); break;
