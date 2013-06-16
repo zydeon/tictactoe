@@ -14,6 +14,7 @@
 #include "project.hpp"
 #include "resources.hpp"
 #include "Light.hpp"
+#include "glm.h"
 
 using namespace std;
 
@@ -39,6 +40,8 @@ Fence *f;
 Light L0, L1;
 
 char nearTable;
+
+GLMmodel *bunny;
 
 /*
  * T | Y | U
@@ -89,7 +92,15 @@ void initObjects(){
 	sky = new Surface(XWORLD, ZWORLD, SKY_BMP, Material() );
 	wall = new Surface(YWORLD, XWORLD, WALLS_BMP, Material() );
 	ground = new Surface(XWORLD,ZWORLD, FLOOR_BMP, Material() );
-	f = new Fence(FENCE_W, FENCE_H, FENCE_D);	
+	f = new Fence(FENCE_W, FENCE_H, FENCE_D);
+
+	/*bunny = glmReadOBJ("models/fence.obj");
+	if (!bunny)  exit(0);
+	glmUnitize(bunny);
+	glmFacetNormals(bunny);
+	glmVertexNormals(bunny, 90.0);
+	glmLinearTexture(bunny);
+	glmReadMTL(bunny, "fence.mtl");*/
 
 	players[0].loadTextures(true);
 	players[0].setZ(5.0);
@@ -107,24 +118,24 @@ void initLights(){
 
 	// Personal focus
 	L0 = Light( 		GL_LIGHT0,
-						color4( 0.0, 0.0, 0.2, 1.0 ), 	// ambient
-						color4( 0.0, 0.0, 0.8, 1.0 ),	// diffuse
+						color4( 0.2, 0.2, 0.2, 1.0 ), 	// ambient
+						color4( 0.8	, 0.8, 0.8, 1.0 ),	// diffuse
 						color4( 1.0, 1.0, 0.0, 1.0 ),	// specular
 						float4( 0.0, 20.0, 0.0, 1.0 ),	// position 		(will be updated)
 						float3( 0.0, -1.0, 0.0 ),		// spot direction	(will be updated)
-						0,							// spot exponent
+						0,								// spot exponent
 						10.0f							// spot cutoff
 					);	
 
 	// Lamp
 	L1 = Light( 		GL_LIGHT1,
-						color4( 0.2, 0, 0, 1.0 ), 	// ambient
-						color4( 0.8, 0, 0, 1.0 ),	// diffuse
+						color4( 0.2, 0.2, 0, 1.0 ), 	// ambient
+						color4( 0.8, 0.2, 0, 1.0 ),		// diffuse
 						color4( 1.0, 1.0, 0.0, 1.0 ),	// specular
 						float4( 0.0, 10.0, 0.0, 1.0 ),	// position 		(will be updated)
 						float3( 0.0, -1.0, 0.0 ),		// spot direction	(will be updated)
-						128,							// spot exponent
-						60.0f							// spot cutoff
+						0,								// spot exponent
+						10.0f							// spot cutoff
 					);
 
 }
@@ -175,7 +186,7 @@ void inputKeyboardCb(unsigned char key, int x, int y){
 		case 'b': if(nearTable) table->makeMove(playerX, 6); break;
 		case 'n': if(nearTable) table->makeMove(playerX, 7); break;
 		case 'm': if(nearTable) table->makeMove(playerX, 8); break;
-	}       
+	}
 
 	checkCollisions();
 	glutPostRedisplay();
@@ -266,6 +277,15 @@ void draw(){
 				float3(-sin(currPlayer->angY), sin(currPlayer->angX), -cos(currPlayer->angY)) );
 	L1.enable();
 	L0.enable();
+
+		glEnable(GL_COLOR_MATERIAL);
+		glTranslatef(0,4,0);
+		glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
+		glColor3f(0.2,0.2,0.2);
+		glmDraw(bunny, GLM_SMOOTH  );
+		glTranslatef(0,-4,0);
+		glDisable(GL_COLOR_MATERIAL);
+
 		drawFence();
 		drawWalls();
 		drawSky();
