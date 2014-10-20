@@ -30,6 +30,6 @@ For playing in the board:
 
 # Screenshots
 
-![](/screenshots/1.jpg)
+![](/screenshots/1.png)
 
-![](/screenshots/2.jpg)
+![](/screenshots/2.png)
