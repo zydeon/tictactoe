@@ -4,14 +4,14 @@ Tic-Tac-Toe
 Implementation from scratch of tic-tac-toe in a 3D world.  
 __Frameworks:__ OpenGL (C++)
 
-# Usage
+## Usage
 ```
 $ git clone git@github.com:zydeon/tictactoe.git
 $ cd tictactoe
 $ make
 ```
 
-## Keys
+### Keys
 
 __X__: switch player  
 __W__: ↑  
@@ -28,7 +28,7 @@ For playing in the board:
 | __B__ | __N__ | __M__ |
 |   |   |   |
 
-# Screenshots
+## Screenshots
 
 ![](/screenshots/1.png)
 
