@@ -18,6 +18,7 @@ __W__: ↑
 __A__: ←  
 __S__: ↓  
 __D__: ➝  
+__Esc__: quit the game
 
 For playing in the board:
 
