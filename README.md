@@ -22,12 +22,10 @@ __Esc__: quit the game
 
 For playing in the board:
 
-|   |   |   |
-----|---|----
-| __T__ | __Y__ | __U__ |
+| T  | Y | U |
+:----:|:---:|:----:
 | __G__ | __H__ | __J__ |
 | __B__ | __N__ | __M__ |
-|   |   |   |
 
 ## Screenshots
 
